@@ -20,3 +20,6 @@ exit
 or
 
 `.\gradlew.bat :bootRun`
+
+# Execute HTTP Requests
+Example HTTP requests are available in scratches/rest-api.http file.
