@@ -11,6 +11,8 @@ import java.util.List;
 
 
 @Entity
+// Table name must be quoted because order is a reserved
+// word in MySQL
 @Table(name = "\"order\"")
 @Data
 @NoArgsConstructor
