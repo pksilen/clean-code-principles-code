@@ -1,6 +1,17 @@
 # Start MySql
 
-docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql:latest
+
+`docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql:latest`
+
+# Create database
+
+```
+docker exec --it mysql bash
+mysql -u root -p
+create database public;
+exit
+exit
+```
 
 # Start Spring Boot Application
 
