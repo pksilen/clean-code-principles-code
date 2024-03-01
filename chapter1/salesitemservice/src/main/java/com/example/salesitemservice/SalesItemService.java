@@ -1,16 +1,18 @@
 package com.example.salesitemservice;
 
+
 public interface SalesItemService {
-    SalesItem createSalesItem(SalesItemArg salesItemArg);
-    SalesItem getSalesItemById(Long id);
+  SalesItem createSalesItem(InputSalesItem inputSalesItem);
 
-    Iterable<SalesItem> getSalesItemsByUserAccountId(
-            Long userAccountId
-    );
+  SalesItem getSalesItemById(Long id);
 
-    Iterable<SalesItem> getSalesItems();
+  Iterable<SalesItem> getSalesItemsByUserAccountId(Long userAccountId);
 
-    void updateSalesItem(Long id, SalesItemArg salesItemArg);
-    void deleteSalesItemById(Long id);
-    void deleteSalesItems();
+  Iterable<SalesItem> getSalesItems();
+
+  void updateSalesItem(Long id, InputSalesItem inputSalesItem);
+
+  void deleteSalesItemById(Long id);
+
+  void deleteSalesItems();
 }

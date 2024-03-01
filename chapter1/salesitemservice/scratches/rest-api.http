@@ -1,0 +1,39 @@
+POST http://localhost:8080/sales-items
+Content-Type: application/json
+
+{
+  "userAccountId": 2,
+  "name": "Sales item 2",
+  "price": 20
+}
+
+###
+GET http://localhost:8080/sales-items
+Accept: application/json
+
+###
+GET http://localhost:8080/sales-items/5
+Accept: application/json
+
+###
+GET http://localhost:8080/sales-items?userAccountId=2
+Accept: application/json
+
+###
+
+PUT http://localhost:8080/sales-items/6
+Content-Type: application/json
+
+{
+  "userAccountId": 3,
+  "name": "Sales item 3",
+  "price": 30
+}
+
+###
+DELETE http://localhost:8080/sales-items/4
+Accept: application/json
+
+###
+DELETE http://localhost:8080/sales-items
+Accept: application/json

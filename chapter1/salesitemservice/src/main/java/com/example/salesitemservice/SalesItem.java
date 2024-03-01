@@ -13,40 +13,38 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SalesItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private Long userAccountId;
+  private Long userAccountId;
 
-    @NotNull
-    private String name;
+  @NotNull
+  private String name;
 
-    @Min(value = 0, message = "Price must be greater than 0")
-    @Max(
-            value = Integer.MAX_VALUE,
-            message = "Price must be <= " + Integer.MAX_VALUE
-    )
-    private Integer price;
+  @Min(value = 0, message = "Price must be greater than 0")
+  @Max(
+    value = Integer.MAX_VALUE,
+    message = "Price must be <= " + Integer.MAX_VALUE
+  )
+  private Integer price;
 
-    static SalesItem from(final SalesItemArg salesItemArg) {
-        return new ModelMapper()
-                .map(salesItemArg, SalesItem.class);
-    }
+  static SalesItem from(final InputSalesItem inputSalesItem) {
+    return new ModelMapper().map(inputSalesItem, SalesItem.class);
+  }
 
-    static SalesItem from(
-            final SalesItemArg salesItemArg,
-            final Long id
-    ) {
-        final var salesItem =
-                new ModelMapper().map(salesItemArg, SalesItem.class);
-
-        salesItem.setId(id);
-        return salesItem;
-    }
+  static SalesItem from(
+    final InputSalesItem inputSalesItem,
+    final Long id
+  ) {
+    final var salesItem = new ModelMapper().map(inputSalesItem, SalesItem.class);
+    salesItem.setId(id);
+    return salesItem;
+  }
 }

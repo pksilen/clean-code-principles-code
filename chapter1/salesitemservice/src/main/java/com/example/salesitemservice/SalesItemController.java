@@ -19,77 +19,75 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(SalesItemController.API_ENDPOINT)
 @Tag(
-        name = "Sales item API",
-        description = "Manages sales items"
+  name = "Sales item API",
+  description = "Manages sales items"
 )
 public class SalesItemController {
-    public static final String API_ENDPOINT = "/sales-items";
+  public static final String API_ENDPOINT = "/sales-items";
+  private final SalesItemService salesItemService;
 
-    private final SalesItemService salesItemService;
+  @Autowired
+  public SalesItemController(final SalesItemService salesItemService) {
+    this.salesItemService = salesItemService;
+  }
 
-    @Autowired
-    public SalesItemController(final SalesItemService salesItemService) {
-        this.salesItemService = salesItemService;
-    }
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  @Operation(summary = "Creates new sales item")
+  public final SalesItem createSalesItem(
+    @RequestBody final InputSalesItem inputSalesItem
+  ) {
+    return salesItemService.createSalesItem(inputSalesItem);
+  }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Creates new sales item")
-    public final SalesItem createSalesItem(
-            @RequestBody final SalesItemArg salesItemArg
-    ) {
-        return salesItemService.createSalesItem(salesItemArg);
-    }
+  @GetMapping
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Gets sales items")
+  public final Iterable<SalesItem> getSalesItems() {
+    return salesItemService.getSalesItems();
+  }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Gets sales items")
-    public final Iterable<SalesItem> getSalesItems() {
-        return salesItemService.getSalesItems();
-    }
+  @GetMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Gets sales item by id")
+  public final SalesItem getSalesItemById(
+    @PathVariable("id") final Long id
+  ) {
+    return salesItemService.getSalesItemById(id);
+  }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Gets sales item by id")
-    public final SalesItem getSalesItemById(
-            @PathVariable("id") final Long id
-    ) {
-        return salesItemService.getSalesItemById(id);
-    }
+  @GetMapping(params = "userAccountId")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Gets sales items by user account id")
+  public final Iterable<SalesItem> getSalesItemsByUserAccountId(
+    @RequestParam("userAccountId") final Long userAccountId
+  ) {
+    return salesItemService.getSalesItemsByUserAccountId(userAccountId);
+  }
 
-    @GetMapping(params = "userAccountId")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Gets sales items by user account id")
-    public final Iterable<SalesItem> getSalesItemsByUserAccountId(
-            @RequestParam("userAccountId") final Long userAccountId
-    ) {
-        return salesItemService
-                .getSalesItemsByUserAccountId(userAccountId);
-    }
+  @PutMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Operation(summary = "Updates a sales item")
+  public final void updateSalesItem(
+    @PathVariable final Long id,
+    @RequestBody final InputSalesItem inputSalesItem
+  ) {
+    salesItemService.updateSalesItem(id, inputSalesItem);
+  }
 
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Updates a sales item")
-    public final void updateSalesItem(
-            @PathVariable final Long id,
-            @RequestBody final SalesItemArg salesItemArg
-    ) {
-        salesItemService.updateSalesItem(id, salesItemArg);
-    }
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Operation(summary = "Deletes a sales item by id")
+  public final void deleteSalesItemById(
+    @PathVariable final Long id
+  ) {
+    salesItemService.deleteSalesItemById(id);
+  }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Deletes a sales item by id")
-    public final void deleteSalesItemById(
-            @PathVariable final Long id
-    ) {
-        salesItemService.deleteSalesItemById(id);
-    }
-
-    @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Deletes all sales items")
-    public final void deleteSalesItems() {
-        salesItemService.deleteSalesItems();
-    }
+  @DeleteMapping
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Operation(summary = "Deletes all sales items")
+  public final void deleteSalesItems() {
+    salesItemService.deleteSalesItems();
+  }
 }
