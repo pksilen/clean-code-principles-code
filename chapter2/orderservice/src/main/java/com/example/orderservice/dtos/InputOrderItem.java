@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InputOrderItem {
   private Long id;
-  private Long orderId;
   private Long salesItemId;
   private Integer quantity;
 }

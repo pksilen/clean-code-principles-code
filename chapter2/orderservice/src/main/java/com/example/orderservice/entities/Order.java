@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.modelmapper.ModelMapper;
 
 import java.util.List;
 
@@ -23,19 +22,33 @@ public class Order {
   private Long id;
   private Long userAccountId;
 
-  @OneToMany(mappedBy="order")
+  @OneToMany(mappedBy="order", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OrderItem> orderItems;
 
   public static Order from(final InputOrder inputOrder) {
-    return new ModelMapper().map(inputOrder, Order.class);
+    final var order = new Order(null, inputOrder.getUserAccountId(), null);
+    order.setOrderItems(createOrderItems(inputOrder, order));
+    return order;
   }
 
   public static Order from(
     final InputOrder inputOrder,
     final Long id
   ) {
-    final var order = new ModelMapper().map(inputOrder, Order.class);
-    order.setId(id);
+    final var order = new Order(id, inputOrder.getUserAccountId(), null);
+    order.setOrderItems(createOrderItems(inputOrder, order));
     return order;
+  }
+
+  private static List<OrderItem> createOrderItems(
+    final InputOrder inputOrder,
+    final Order order
+  ) {
+    return inputOrder.getOrderItems().stream().map(inputOrderItem -> new OrderItem(
+      null,
+      inputOrderItem.getSalesItemId(),
+      inputOrderItem.getQuantity(),
+      order
+    )).toList();
   }
 }
