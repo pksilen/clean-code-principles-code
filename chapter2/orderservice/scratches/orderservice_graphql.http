@@ -1,0 +1,46 @@
+GRAPHQL http://localhost:8080/graphql
+
+query orderById($id: ID!) {
+  orderById(id: $id) {
+      id
+      userAccountId
+      orderItems {
+          id
+          salesItemId
+          quantity
+      }
+  }
+}
+
+{
+   "id": "8c9d59f5-3ede-4ce0-9dd8-cebb544213d1"
+}
+
+###
+GRAPHQL http://localhost:8080/graphql
+
+mutation createOrder {
+    createOrder(inputOrder: {
+        userAccountId: "2",
+        orderItems: [
+            {
+                id: "c60a2f05-4f87-44d7-907f-b00c90c5181b",
+                salesItemId: 2,
+                quantity: 1
+            },
+            {
+                id: "c60a2f05-4f87-44d7-907f-b00c90c5181c",
+                salesItemId: 33,
+                quantity: 33
+            }
+        ]
+    }) {
+        id
+        userAccountId
+        orderItems {
+            id
+            salesItemId,
+            quantity
+        }
+    }
+}

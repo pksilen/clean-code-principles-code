@@ -1,0 +1,52 @@
+POST http://localhost:8080/orders
+Content-Type: application/json
+
+{
+  "userAccountId": "1",
+  "orderItems": [
+    {
+      "id": "c60a2f05-4f87-44d7-907f-b00c90c5181b",
+      "salesItemId": 2,
+      "quantity": 1
+    },
+    {
+      "id": "c60a2f05-4f87-44d7-907f-b00c90c5181c",
+      "salesItemId": 33,
+      "quantity": 33
+    }
+  ]
+}
+
+###
+GET http://localhost:8080/orders/7211463f-e657-4f24-a34a-21bf7a352e39
+Accept: application/json
+
+###
+GET http://localhost:8080/orders?userAccountId=1
+Accept: application/json
+
+###
+PUT http://localhost:8080/orders/0479b046-6801-45d6-bda0-8e70cd0bfe7e
+Content-Type: application/json
+
+{
+  "userAccountId": 22,
+  "orderItems": [
+    {
+      "id": "c60a2f05-4f87-44d7-907f-b00c90c5181b",
+      "salesItemId": 100,
+      "quantity": 100
+    },
+    {
+      "id": "c60a2f05-4f87-44d7-907f-b00c90c5181c",
+      "salesItemId": 100,
+      "quantity": 100
+    }
+  ]
+}
+
+###
+DELETE http://localhost:8080/orders/b46e3a19-0601-46ca-b53b-096916ef1b36
+Accept: application/json
+
+###

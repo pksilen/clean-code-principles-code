@@ -1,4 +1,4 @@
-package com.example.orderservice.controllers;
+package com.example.orderservice.controllers.rest;
 
 import com.example.orderservice.dtos.InputOrder;
 import com.example.orderservice.dtos.OutputOrder;

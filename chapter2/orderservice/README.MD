@@ -31,6 +31,10 @@ or
 
 `.\gradlew.bat :bootRun`
 
-# Execute HTTP Requests
+# Execute REST HTTP Requests
 Example HTTP requests are available in scratches/orderservice_rest.http file.
+The file can be used e.g., with the HTTP client of Intellij IDEA Ultimate.
+
+# Execute GraphQL HTTP Requests
+Example HTTP requests are available in scratches/orderservice_graphql.http file.
 The file can be used e.g., with the HTTP client of Intellij IDEA Ultimate.
