@@ -1,12 +1,13 @@
 package com.example.orderservice.services;
 
 import com.example.orderservice.dtos.InputOrder;
-import com.example.orderservice.entities.Order;
+import com.example.orderservice.dtos.OutputOrder;
+import com.example.orderservice.repositories.DbOrder;
 
 public interface OrderService {
-  Order createOrder(final InputOrder inputOrder);
-  Order getOrderById(final String id);
-  Iterable<Order> getOrdersByUserAccountId(final String userAccountId);
+  OutputOrder createOrder(final InputOrder inputOrder);
+  OutputOrder getOrderById(final String id);
+  Iterable<OutputOrder> getOrdersByUserAccountId(final String userAccountId);
   void updateOrder(final String id, final InputOrder inputOrder);
   void deleteOrderById(final String id);
 }

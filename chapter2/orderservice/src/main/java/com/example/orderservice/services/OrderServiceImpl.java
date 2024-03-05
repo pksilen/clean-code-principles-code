@@ -2,12 +2,17 @@ package com.example.orderservice.services;
 
 import com.example.orderservice.Application;
 import com.example.orderservice.dtos.InputOrder;
+import com.example.orderservice.dtos.OutputOrder;
 import com.example.orderservice.entities.Order;
+import com.example.orderservice.repositories.DbOrder;
 import com.example.orderservice.errors.EntityNotFoundError;
 import com.example.orderservice.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.stream.StreamSupport;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -22,28 +27,35 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public final Order createOrder(final InputOrder inputOrder) {
+  public final OutputOrder createOrder(final InputOrder inputOrder) {
     final var order = Order.from(inputOrder);
-    return orderRepository.save(order);
+    final var dbOrder = DbOrder.from(order);
+    orderRepository.save(dbOrder);
+    return order.toOutput();
   }
 
   @Override
-  public final Order getOrderById(final String id) {
-    return orderRepository.findById(id)
+  public final OutputOrder getOrderById(final String id) {
+    final var dbOrder = orderRepository.findById(id)
       .orElseThrow(() ->
         new EntityNotFoundError(ORDER, id));
+
+    return dbOrder.toDomainEntity().toOutput();
   }
 
   @Override
-  public Iterable<Order> getOrdersByUserAccountId(final String userAccountId) {
-    return orderRepository.findByUserAccountId(userAccountId);
+  public Iterable<OutputOrder> getOrdersByUserAccountId(final String userAccountId) {
+    final var dbOrders = orderRepository.findByUserAccountId(userAccountId);
+    return StreamSupport.stream(dbOrders.spliterator(), false)
+      .map(dbOrder -> dbOrder.toDomainEntity().toOutput()).toList();
   }
 
   @Override
   public void updateOrder(final String id, InputOrder inputOrder) {
     if (orderRepository.existsById(id)) {
-      final var order = Order.from(inputOrder, id);
-      orderRepository.save(order);
+      final var order = Order.from(inputOrder);
+      final var dbOrder = DbOrder.from(order, id);
+      orderRepository.save(dbOrder);
     } else {
       throw new EntityNotFoundError(ORDER, id);
     }

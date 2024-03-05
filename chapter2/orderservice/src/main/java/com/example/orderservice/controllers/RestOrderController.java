@@ -1,7 +1,8 @@
 package com.example.orderservice.controllers;
 
 import com.example.orderservice.dtos.InputOrder;
-import com.example.orderservice.entities.Order;
+import com.example.orderservice.dtos.OutputOrder;
+import com.example.orderservice.repositories.DbOrder;
 import com.example.orderservice.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class RestOrderController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public final Order createOrder(
+  public final OutputOrder createOrder(
     @RequestBody final InputOrder inputOrder
   ) {
     return orderService.createOrder(inputOrder);
@@ -28,7 +29,7 @@ public class RestOrderController {
 
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public final Order getOrderById(
+  public final OutputOrder getOrderById(
     @PathVariable("id") final String id
   ) {
     return orderService.getOrderById(id);
@@ -36,7 +37,7 @@ public class RestOrderController {
 
   @GetMapping(params = "userAccountId")
   @ResponseStatus(HttpStatus.OK)
-  public final Iterable<Order> getOrdersByUserAccountId(
+  public final Iterable<OutputOrder> getOrdersByUserAccountId(
     @RequestParam("userAccountId") final String userAccountId
   ) {
     return orderService.getOrdersByUserAccountId(userAccountId);

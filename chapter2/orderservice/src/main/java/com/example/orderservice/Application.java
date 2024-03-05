@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class Application {
-  // "mongodb" or "sql"
+  // Define used database: "mongodb" or "sql"
   public static final String DATABASE_TYPE = "sql";
 
   public static void main(String[] args) {
