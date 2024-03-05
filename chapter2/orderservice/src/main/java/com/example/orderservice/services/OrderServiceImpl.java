@@ -28,9 +28,20 @@ public class OrderServiceImpl implements OrderService {
 
   @Override
   public final OutputOrder createOrder(final InputOrder inputOrder) {
+    // Creates domain object 'order' performing, e.g. dynamic validation
+    // according to business logic
     final var order = Order.from(inputOrder);
+
+    // Creates database entity which can different from domain entity
     final var dbOrder = DbOrder.from(order);
+
     orderRepository.save(dbOrder);
+
+    // Returns output DTO which can differ from the domain entity, e.g.
+    // domain entity might contain fields not wanted to deliver to clients
+    // Output DTO class contains validations which can be enabled in controllers
+    // This can be useful to prevent disclosure of sensitive data upon a successful
+    // injection attack
     return order.toOutput();
   }
 

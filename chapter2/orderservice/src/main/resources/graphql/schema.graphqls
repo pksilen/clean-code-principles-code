@@ -1,0 +1,30 @@
+input InputOrder {
+    userAccountId: ID!
+    orderItems: [InputOrderItem!]!
+}
+
+input InputOrderItem {
+    id: ID!,
+    salesItemId: ID!
+    quantity: Int!
+}
+
+type OutputOrder {
+    id: ID!,
+    userAccountId: ID!
+    orderItems: [OutputOrderItem!]!
+}
+
+type OutputOrderItem {
+    id: ID!,
+    salesItemId: ID!
+    quantity: Int!
+}
+
+type Query {
+    orderById(id: ID!): OutputOrder!
+}
+
+type Mutation {
+    createOrder(inputOrder: InputOrder!): OutputOrder!
+}

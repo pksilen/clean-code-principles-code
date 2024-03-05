@@ -21,6 +21,10 @@ exit
 
 # Start Spring Boot Application
 
+Before starting the application, specify which database type to use: "sql" or "mongodb"
+in `Application.java` file. Initial value is "sql".
+
+
 `./gradlew :bootRun`
 
 or

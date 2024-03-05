@@ -2,8 +2,8 @@ package com.example.orderservice.controllers;
 
 import com.example.orderservice.dtos.InputOrder;
 import com.example.orderservice.dtos.OutputOrder;
-import com.example.orderservice.repositories.DbOrder;
 import com.example.orderservice.services.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ public class RestOrderController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public final OutputOrder createOrder(
-    @RequestBody final InputOrder inputOrder
+    @Valid @RequestBody final InputOrder inputOrder
   ) {
     return orderService.createOrder(inputOrder);
   }
@@ -47,7 +47,7 @@ public class RestOrderController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public final void updateOrder(
     @PathVariable final String id,
-    @RequestBody final InputOrder inputOrder
+    @Valid @RequestBody final InputOrder inputOrder
   ) {
     orderService.updateOrder(id, inputOrder);
   }
