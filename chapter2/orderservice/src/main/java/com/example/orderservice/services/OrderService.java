@@ -5,8 +5,8 @@ import com.example.orderservice.entities.Order;
 
 public interface OrderService {
   Order createOrder(final InputOrder inputOrder);
-  Order getOrderById(final Long id);
-  Iterable<Order> getOrdersByUserAccountId(final Long userAccountId);
-  void updateOrder(Long id, final InputOrder inputOrder);
-  void deleteOrderById(Long id);
+  Order getOrderById(final String id);
+  Iterable<Order> getOrdersByUserAccountId(final String userAccountId);
+  void updateOrder(final String id, final InputOrder inputOrder);
+  void deleteOrderById(final String id);
 }

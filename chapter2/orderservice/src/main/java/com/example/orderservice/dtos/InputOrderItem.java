@@ -1,5 +1,6 @@
 package com.example.orderservice.dtos;
 
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InputOrderItem {
-  private Long id;
-  private Long salesItemId;
+  private String id;
+  private String salesItemId;
+
+  @Min(1)
   private Integer quantity;
 }

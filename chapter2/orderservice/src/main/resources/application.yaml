@@ -1,4 +1,9 @@
 spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: public
   datasource:
     url: jdbc:mysql://localhost:3306/public
     username: root
@@ -11,5 +16,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  main:
+    allow-bean-definition-overriding: true
 
 

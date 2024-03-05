@@ -3,9 +3,10 @@
 - JDK 17
 - Docker
 
-# Start MySql
+# Start MySql and MongoDB
 
 `docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql:latest`
+`docker run --name mongodb -p 27017:27017 -d mongo:latest`
 
 # Create database
 

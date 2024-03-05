@@ -4,10 +4,11 @@ import com.example.orderservice.entities.Order;
 
 import java.util.Optional;
 
+
 public interface OrderRepository {
   <S extends Order> S save(final S order);
-  Optional<Order> findById(final Long id);
-  boolean existsById(final Long id);
-  Iterable<Order> findByUserAccountId(final Long userAccountId);
-  void deleteById(final Long id);
+  Optional<Order> findById(final String id);
+  boolean existsById(final String id);
+  Iterable<Order> findByUserAccountId(final String userAccountId);
+  void deleteById(final String id);
 }

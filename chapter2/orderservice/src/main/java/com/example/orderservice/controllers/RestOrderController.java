@@ -29,7 +29,7 @@ public class RestOrderController {
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
   public final Order getOrderById(
-    @PathVariable("id") final Long id
+    @PathVariable("id") final String id
   ) {
     return orderService.getOrderById(id);
   }
@@ -37,7 +37,7 @@ public class RestOrderController {
   @GetMapping(params = "userAccountId")
   @ResponseStatus(HttpStatus.OK)
   public final Iterable<Order> getOrdersByUserAccountId(
-    @RequestParam("userAccountId") final Long userAccountId
+    @RequestParam("userAccountId") final String userAccountId
   ) {
     return orderService.getOrdersByUserAccountId(userAccountId);
   }
@@ -45,7 +45,7 @@ public class RestOrderController {
   @PutMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public final void updateOrder(
-    @PathVariable final Long id,
+    @PathVariable final String id,
     @RequestBody final InputOrder inputOrder
   ) {
     orderService.updateOrder(id, inputOrder);
@@ -54,7 +54,7 @@ public class RestOrderController {
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public final void deleteOrder(
-    @PathVariable final Long id
+    @PathVariable final String id
   ) {
     orderService.deleteOrderById(id);
   }

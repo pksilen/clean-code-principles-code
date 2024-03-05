@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Entity
@@ -18,22 +20,23 @@ import java.util.List;
 @AllArgsConstructor
 public class Order {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  private Long userAccountId;
+  @jakarta.persistence.Id
+  private String id;
+  private String userAccountId;
 
-  @OneToMany(mappedBy="order", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OrderItem> orderItems;
 
   public static Order from(final InputOrder inputOrder) {
-    final var order = new Order(null, inputOrder.getUserAccountId(), null);
+    final var id = UUID.randomUUID().toString();
+    final var order = new Order(id, inputOrder.getUserAccountId(), null);
     order.setOrderItems(createOrderItems(inputOrder, order));
     return order;
   }
 
   public static Order from(
     final InputOrder inputOrder,
-    final Long id
+    final String id
   ) {
     final var order = new Order(id, inputOrder.getUserAccountId(), null);
     order.setOrderItems(createOrderItems(inputOrder, order));
@@ -44,11 +47,15 @@ public class Order {
     final InputOrder inputOrder,
     final Order order
   ) {
-    return inputOrder.getOrderItems().stream().map(inputOrderItem -> new OrderItem(
-      null,
-      inputOrderItem.getSalesItemId(),
-      inputOrderItem.getQuantity(),
-      order
-    )).toList();
+    return inputOrder.getOrderItems().stream().map(inputOrderItem -> {
+      final var id = inputOrderItem.getId();
+
+      return new OrderItem(
+        id == null ? UUID.randomUUID().toString() : id,
+        inputOrderItem.getSalesItemId(),
+        inputOrderItem.getQuantity(),
+        order
+      );
+    }).toList();
   }
 }

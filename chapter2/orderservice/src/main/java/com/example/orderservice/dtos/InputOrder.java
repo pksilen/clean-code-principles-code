@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InputOrder {
-  private Long userAccountId;
+  private String userAccountId;
   private List<InputOrderItem> orderItems;
 }
 
