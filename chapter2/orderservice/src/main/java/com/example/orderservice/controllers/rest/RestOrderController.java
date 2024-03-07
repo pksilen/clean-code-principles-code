@@ -19,6 +19,8 @@ public class RestOrderController {
     this.orderService = orderService;
   }
 
+  // Controller methods should not contain any business logic
+  // Controller method should delegate to application services (use cases)
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public final OutputOrder createOrder(
