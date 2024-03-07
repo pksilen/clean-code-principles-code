@@ -2,8 +2,7 @@ package com.example.orderservice.controllers.graphql;
 
 import com.example.orderservice.dtos.InputOrder;
 import com.example.orderservice.dtos.OutputOrder;
-import com.example.orderservice.repositories.DbOrder;
-import com.example.orderservice.services.OrderService;
+import com.example.orderservice.services.application.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;

@@ -1,4 +1,4 @@
-package com.example.orderservice.services;
+package com.example.orderservice.services.application;
 
 import com.example.orderservice.Application;
 import com.example.orderservice.dtos.InputOrder;
@@ -9,11 +9,12 @@ import com.example.orderservice.errors.EntityNotFoundError;
 import com.example.orderservice.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.stream.StreamSupport;
 
+@Primary
 @Service
 public class OrderServiceImpl implements OrderService {
   private static final String ORDER = "Order";
@@ -32,13 +33,13 @@ public class OrderServiceImpl implements OrderService {
     // according to business logic
     final var order = Order.from(inputOrder);
 
-    // Creates database entity which can different from domain entity
+    // Creates database entity which can be different from domain entity
     final var dbOrder = DbOrder.from(order);
 
     orderRepository.save(dbOrder);
 
     // Returns output DTO which can differ from the domain entity, e.g.
-    // domain entity might contain fields not wanted to deliver to clients
+    // domain entity might contain fields not wanted to be delivered to clients
     // Output DTO class contains validations which can be enabled in controllers
     // This can be useful to prevent disclosure of sensitive data upon a successful
     // injection attack

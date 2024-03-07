@@ -2,7 +2,7 @@ package com.example.orderservice.controllers.rest;
 
 import com.example.orderservice.dtos.InputOrder;
 import com.example.orderservice.dtos.OutputOrder;
-import com.example.orderservice.services.OrderService;
+import com.example.orderservice.services.application.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

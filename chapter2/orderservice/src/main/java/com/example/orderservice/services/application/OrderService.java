@@ -1,4 +1,4 @@
-package com.example.orderservice.services;
+package com.example.orderservice.services.application;
 
 import com.example.orderservice.dtos.InputOrder;
 import com.example.orderservice.dtos.OutputOrder;
