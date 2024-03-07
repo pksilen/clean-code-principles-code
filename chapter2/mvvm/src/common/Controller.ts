@@ -1,4 +1,4 @@
-import AbstractAction from "./AbstractAction";
+import AbstractAction from "./model/actions/AbstractAction";
 
 export type Dispatch = (plainActionObject: { type: AbstractAction<any> }) => void;
 

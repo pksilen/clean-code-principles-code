@@ -1,6 +1,6 @@
-import undoActions from "./undoActions";
-import AbstractAction from "./AbstractAction";
-import UndoAction from "./UndoAction";
+import undoActions from "../actions/undoActions";
+import AbstractAction from "../actions/AbstractAction";
+import UndoAction from "../actions/UndoAction";
 
 export default function createReducer<S>(
   initialState: S,

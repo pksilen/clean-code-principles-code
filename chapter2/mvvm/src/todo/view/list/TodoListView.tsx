@@ -1,10 +1,10 @@
 import { connect } from "react-redux";
 import { useEffect } from "react";
-import { controller, ActionDispatchers, State } from "./todosController";
+import { controller, ActionDispatchers, State } from "../../todoController";
 
 type Props = ActionDispatchers & State;
 
-function TodosListView({ toggleTodoDone, startFetchTodos, todos }: Props) {
+function TodoListView({ toggleTodoDone, startFetchTodos, todos }: Props) {
   useEffect(() => {
     startFetchTodos();
   }, [startFetchTodos]);
@@ -24,4 +24,4 @@ function TodosListView({ toggleTodoDone, startFetchTodos, todos }: Props) {
 
 export default connect(controller.getState, () =>
   controller.getActionDispatchers()
-)(TodosListView);
+)(TodoListView);

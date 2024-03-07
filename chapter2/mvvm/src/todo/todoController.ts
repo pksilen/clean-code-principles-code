@@ -1,10 +1,10 @@
-import store from "./store";
-import { AppState } from "./AppState";
-import ToggleDoneTodoAction from "./ToggleDoneTodoAction";
-import StartFetchTodosAction from "./StartFetchTodosAction";
-import Controller from "./Controller";
+import store from "../common/model/store";
+import { AppState } from "../common/model/AppState";
+import ToggleDoneTodoAction from "./model/actions/ToggleDoneTodoAction";
+import StartFetchTodosAction from "./model/actions/StartFetchTodosAction";
+import Controller from "../common/Controller";
 
-class TodosController extends Controller {
+class TodoController extends Controller {
   getState(appState: AppState) {
     return {
       todos: appState.todosState.todos,
@@ -23,7 +23,7 @@ class TodosController extends Controller {
   }
 }
 
-export const controller = new TodosController(store.dispatch);
+export const controller = new TodoController(store.dispatch);
 export type State = ReturnType<typeof controller.getState>;
 
 export type ActionDispatchers = ReturnType<

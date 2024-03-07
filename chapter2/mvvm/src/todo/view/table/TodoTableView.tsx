@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { useEffect } from "react";
-import { controller, ActionDispatchers, State } from "./todosController";
+import { controller, ActionDispatchers, State } from "../../todoController";
 
 type Props = ActionDispatchers & State;
 

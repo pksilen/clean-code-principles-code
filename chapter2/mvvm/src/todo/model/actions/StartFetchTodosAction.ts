@@ -1,4 +1,4 @@
-import { TodoState } from "./TodoState";
+import { TodoState } from "../state/TodoState";
 import AbstractTodoAction from "./AbstractTodoAction";
 
 export default class StartFetchTodosAction extends AbstractTodoAction {

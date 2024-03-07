@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
-import ListItemTodoView from "./ListItemTodoView";
-import TableRowTodoView from "./TableRowTodoView";
-import { controller, ActionDispatchers, State } from "./todosController";
+import ListItemTodoView from "./list/ListItemTodoView";
+import TableRowTodoView from "./table/TableRowTodoView";
+import { controller, ActionDispatchers, State } from "../todoController";
 
 type Props = ActionDispatchers &
   State & {
@@ -12,24 +12,20 @@ type Props = ActionDispatchers &
 function TodosView({
   toggleTodoDone,
   startFetchTodos,
-  todos
+  todos,
+  TodoView
 }: Props) {
   useEffect(() => {
     startFetchTodos();
-      console.log("Jee");
   }, [startFetchTodos]);
 
   const todoViews = todos.map((todo) => (
-    <TableRowTodoView key={todo.id} todo={todo} toggleTodoDone={toggleTodoDone} />
+    <TodoView key={todo.id} todo={todo} toggleTodoDone={toggleTodoDone} />
   ));
 
-  return (
-    <div>
-      <table>
-        <tbody>{todoViews}</tbody>
-      </table>
-    </div>
-  );
+  return TodoView === ListItemTodoView
+      ? <ul>{todoViews}</ul>
+      : <table><tbody>{todoViews}</tbody></table>;
 }
 
 export default connect(controller.getState, () =>

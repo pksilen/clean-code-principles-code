@@ -1,9 +1,9 @@
-import { TodoViewProps } from "./TodoViewProps";
+import { TodosViewProps } from "../TodosViewProps";
 
 export default function TableRowTodoView({
   toggleTodoDone,
   todo: { id, name, isDone },
-}: TodoViewProps) {
+}: TodosViewProps) {
   return (
     <tr>
       <td>{id}</td>

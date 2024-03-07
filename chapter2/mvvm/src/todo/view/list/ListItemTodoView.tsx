@@ -1,9 +1,9 @@
-import { TodoViewProps } from "./TodoViewProps";
+import { TodosViewProps } from "../TodosViewProps";
 
 export default function ListItemTodoView({
   toggleTodoDone,
   todo: { id, name, isDone },
-}: TodoViewProps) {
+}: TodosViewProps) {
   return (
     <li>
       {id}&nbsp;
