@@ -8,9 +8,7 @@ export default function ListItemTodoView({
     <li>
       {id}&nbsp;
       {name}&nbsp;
-      {isDone ? undefined : (
-        <button onClick={() => toggleTodoDone(id)}>Mark done</button>
-      )}
+      {isDone || <button onClick={() => toggleTodoDone(id)}>Mark done</button>}
     </li>
   );
 }

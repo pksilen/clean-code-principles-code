@@ -10,7 +10,7 @@ function App() {
     <div>
       <Provider store={store}>
           { /*You can change the TodoView to TableRowTodoView */ }
-          <TodosView TodoView={TableRowTodoView} />
+          <TodosView TodoView={ListItemTodoView} />
       </Provider>
     </div>
   );

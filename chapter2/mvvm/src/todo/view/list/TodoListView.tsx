@@ -13,9 +13,7 @@ function TodoListView({ toggleTodoDone, startFetchTodos, todos }: Props) {
     <li key={id}>
       {id}&nbsp;
       {name}&nbsp;
-      {isDone ? undefined : (
-        <button onClick={() => toggleTodoDone(id)}>Mark done</button>
-      )}
+      {isDone || <button onClick={() => toggleTodoDone(id)}>Mark done</button>}
     </li>
   ));
 
