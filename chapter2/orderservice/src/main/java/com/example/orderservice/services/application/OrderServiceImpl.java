@@ -29,9 +29,17 @@ public class OrderServiceImpl implements OrderService {
 
   @Override
   public final OutputOrder createOrder(final InputOrder inputOrder) {
-    // Creates domain object 'order' performing, e.g. dynamic validation
-    // according to business logic
+    // Input DTO is converted to valid domain entity
     final var order = Order.from(inputOrder);
+    
+    // If your model had additional business logic, you
+    // could perform it here using domain entity and/or
+    // domain service methods
+    // Do not inline all the business logic code here, but
+    // create separate methods either in domain entity or
+    // domain service classes.
+    // This example does not have any additional business
+    // logic
 
     // Creates database entity which can be different from domain entity
     final var dbOrder = DbOrder.from(order);
