@@ -35,12 +35,18 @@ public class DbOrder {
     return dbOrder;
   }
 
+  // This is a conversion method for converting
+  // domain entity into a database entity
+  // Those two can have different representations
   public static DbOrder from(final Order order, final String id) {
     final var dbOrder = new DbOrder(id, order.getUserAccountId(), null);
     dbOrder.setOrderItems(createDbOrderItems(order, dbOrder));
     return dbOrder;
   }
 
+  // This is a conversion method for converting
+  // database entity to domain entity
+  // Those two can have different representations
   public Order toDomainEntity() {
     return new ModelMapper().map(this, Order.class);
   }
