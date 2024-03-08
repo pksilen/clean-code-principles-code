@@ -1,12 +1,29 @@
 import AbstractAction from "./model/actions/AbstractAction";
 
-export type Dispatch = (plainActionObject: { type: AbstractAction<any> }) => void;
+export type Dispatch = (action: AbstractAction<any>) => void;
+
+export type ReduxDispatch = (reduxActionObject: {
+  type: AbstractAction<any>;
+}) => void;
 
 export default class Controller {
-  protected readonly dispatch: (action: AbstractAction<any>) => void;
+  protected readonly dispatch: Dispatch;
 
-  // The 'dispatch' is from Redux library
-  constructor(dispatch: Dispatch) {
-    this.dispatch = (action: AbstractAction<any>) => dispatch({ type: action });
+  constructor(reduxDispatch: ReduxDispatch) {
+    this.dispatch = (action: AbstractAction<any>) =>
+      reduxDispatch({ type: action });
+  }
+
+  dispatchWithDi(
+    diContainer: { create: (...args: any[]) => Promise<any> },
+    ActionClass: abstract new (...args: any[]) => AbstractAction<any>,
+    otherArgs?: {}
+  ) {
+    diContainer
+      .create(ActionClass, {
+        dispatch: this.dispatch,
+        ...(otherArgs ?? {}),
+      })
+      .then((action: any) => this.dispatch(action));
   }
 }

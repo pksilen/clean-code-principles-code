@@ -1,4 +1,4 @@
 import { TodoState } from "../state/TodoState";
-import AbstractUndoableAction from "../../../common/model/actions/AbstractUndoableAction";
+import AbstractAction from "../../../common/model/actions/AbstractAction";
 
-export default abstract class AbstractTodoAction extends AbstractUndoableAction<TodoState> {}
+export default abstract class AbstractTodoAction extends AbstractAction<TodoState> {}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Provider } from "react-redux";
-import store from "../common/model/store";
+import store from "../common/model/state/store";
 import TodosView from "../todo/view/TodosView";
 import ListItemTodoView from "../todo/view/list/ListItemTodoView";
 
