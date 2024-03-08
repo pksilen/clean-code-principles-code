@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./app/App";
+import AppView from "./app/AppView";
 import diContainer from "./common/di/diContainer";
 
 const root = ReactDOM.createRoot(
@@ -8,5 +8,5 @@ const root = ReactDOM.createRoot(
 );
 
 diContainer.configure().then(() => {
-  root.render(<App />);
+  root.render(<AppView />);
 });

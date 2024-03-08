@@ -4,7 +4,7 @@ import store from "../common/model/store";
 import TodosView from "../todo/view/TodosView";
 import ListItemTodoView from "../todo/view/list/ListItemTodoView";
 
-function App() {
+function AppView() {
   return (
     <div>
       <Provider store={store}>
@@ -15,4 +15,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppView;
