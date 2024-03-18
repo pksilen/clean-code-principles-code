@@ -19,6 +19,7 @@ public class CircularBusRoute implements BusRoute {
     if (!busStops.contains(currentBusStop)) {
       throw new IllegalArgumentException("Bus stop does not belong to bus route");
     }
+    
     return busStops.get(0);
   }
 

@@ -1,15 +1,18 @@
-package com.example.cycle5;
+package com.example.cycle6;
 
 import java.util.List;
 
 public class CircularBusRoute implements BusRoute {
   private final List<BusStop> busStops;
+  private final int busStopCount;
 
   public CircularBusRoute(final List<BusStop> busStops) {
     if (busStops == null || busStops.isEmpty()) {
       throw new IllegalArgumentException("Bus route must have at least one bus stop");
     }
+
     this.busStops = List.copyOf(busStops);
+    this.busStopCount = busStops.size();
   }
 
   @Override
@@ -18,11 +21,9 @@ public class CircularBusRoute implements BusRoute {
       throw new IllegalArgumentException("Bus stop does not belong to bus route");
     }
 
-    if (busStops.size() == 1) {
-      return busStops.get(0);
-    }
-
     final int currBusStopIndex = busStops.indexOf(currentBusStop);
-    return busStops.get(currBusStopIndex + 1);
+    final int nextBusStopIndex = (currBusStopIndex + 1) % busStopCount;
+    return busStops.get(nextBusStopIndex);
   }
 }
+
