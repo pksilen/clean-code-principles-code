@@ -1,4 +1,4 @@
-package com.example.cycle7;
+package com.example.cycle8;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +10,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class BusDriverImplTests {
   final Rumor rumor1 = new Rumor();
   final Rumor rumor2 = new Rumor();
+
+  @Test
+  void testDriveToNextBusStop() {
+    // GIVEN
+    final var busStopA = new BusStopImpl();
+    final var busStopB = new BusStopImpl();
+    final var busRoute = new CircularBusRoute(List.of(busStopA, busStopB));
+    final var busDriver = new BusDriverImpl(busRoute, Set.of());
+
+    // WHEN
+    busDriver.driveToNextBusStop();
+
+    // THEN
+    assertEquals(busDriver.getCurrentBusStop(), busStopB);
+  }
 
   @Test
   void testGetRumors() {
