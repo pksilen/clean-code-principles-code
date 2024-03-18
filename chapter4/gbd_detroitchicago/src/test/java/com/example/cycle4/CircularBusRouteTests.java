@@ -1,4 +1,4 @@
-package com.example.cycle3;
+package com.example.cycle4;
 
 import org.junit.jupiter.api.Test;
 
@@ -31,5 +31,18 @@ class CircularBusRouteTests {
 
     // THEN
     assertEquals(nextBusStop, busStop);
+  }
+
+  @Test
+  void testGetNextBusStop_whenBusStopDoesNotBelongToRoute() {
+    // GIVEN
+    BusStop busStopA = new BusStopImpl();
+    BusStop busStopB = new BusStopImpl();
+    CircularBusRoute busRoute = new CircularBusRoute(List.of(busStopA));
+
+    // WHEN + THEN
+    assertThrows(IllegalArgumentException.class, () -> {
+      busRoute.getNextBusStop(busStopB);
+    }, "Bus stop does not belong to bus route");
   }
 }

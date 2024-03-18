@@ -4,16 +4,18 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CircularBusRouteTests {
 
   @Test
   void testConstructor_whenNoBusStops() {
-    final List<BusStop> emptyList = List.of();
+    // GIVEN
+    final List<BusStop> noBusStops = List.of();
 
+    // WHEN + THEN
     assertThrows(IllegalArgumentException.class, () -> {
-      new CircularBusRoute(emptyList);
+      new CircularBusRoute(noBusStops);
     }, "Bus route must have at least one bus stop");
   }
 }
