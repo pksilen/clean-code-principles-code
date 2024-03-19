@@ -9,6 +9,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.3"
+    "@types/node": "^20.11.30",
+    "express": "^4.18.3",
+    "fetch-h2": "^3.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0",
+    "lodash": "^4.17.21",
+    "typescript": "^5.4.2"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/lodash": "^4.17.0",
+    "prettier": "^3.2.5"
   }
 }
