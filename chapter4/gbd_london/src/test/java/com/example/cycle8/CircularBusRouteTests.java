@@ -1,4 +1,4 @@
-package com.example.cycle7;
+package com.example.cycle8;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,7 +7,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,7 +39,19 @@ class CircularBusRouteTests {
     final var firstBusStop = busRoute.getFirstBusStop();
 
     // THEN
-    assertEquals(firstBusStop, busStopMock1);
+    assertSame(firstBusStop, busStopMock1);
+  }
+
+  @Test
+  void testGetNextBusStop_whenOneBusStop() {
+    // GIVEN
+    final var busRoute = new CircularBusRoute(List.of(busStopMock1));
+
+    // WHEN
+    BusStop nextBusStop = busRoute.getNextBusStop(busStopMock1);
+
+    // THEN
+    assertSame(nextBusStop, busStopMock1);
   }
 }
 
