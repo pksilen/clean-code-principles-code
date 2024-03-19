@@ -1,7 +1,5 @@
 package com.example.cycle17;
 
-import com.example.cycle16.BusDriver;
-import com.example.cycle16.BusDriversParserImpl;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -15,7 +13,7 @@ class BusDriversParserTests {
   void testParse_withOneDriverOneBusStopAndOneRumor() {
     // GIVEN
     final var busDriverSpec = "bus-stop-a;rumor1";
-    final var parser = new com.example.cycle16.BusDriversParserImpl();
+    final var parser = new BusDriversParserImpl();
 
     // WHEN
     final var busDrivers = parser.parse(List.of(busDriverSpec));
@@ -30,7 +28,7 @@ class BusDriversParserTests {
     // GIVEN
     final var busDriverSpec1 = "bus-stop-a;rumor1";
     final var busDriverSpec2 = "bus-stop-b;rumor2";
-    final var parser = new com.example.cycle16.BusDriversParserImpl();
+    final var parser = new BusDriversParserImpl();
 
     // WHEN
     final var busDrivers = parser.parse(List.of(busDriverSpec1, busDriverSpec2));
@@ -54,7 +52,21 @@ class BusDriversParserTests {
     assertBusStopsAreSame(busDrivers);
   }
 
-  private void assertHasCircularBusRouteWithOneStop(final List<com.example.cycle16.BusDriver> busDrivers) {
+  @Test
+  void testParse_withMultipleDriversAndCommonRumor() {
+    // GIVEN
+    final var busDriverSpec1 = "bus-stop-a;rumor1";
+    final var busDriverSpec2 = "bus-stop-b;rumor1";
+    final var parser = new BusDriversParserImpl();
+
+    // WHEN
+    final var busDrivers = parser.parse(List.of(busDriverSpec1, busDriverSpec2));
+
+    // THEN
+    assertEquals(busDrivers.get(0).getRumors(), busDrivers.get(1).getRumors());
+  }
+
+  private void assertHasCircularBusRouteWithOneStop(final List<BusDriver> busDrivers) {
     assertEquals(1, busDrivers.size());
     final var busDriver = busDrivers.get(0);
     final var originalBusStop = busDriver.getCurrentBusStop();
@@ -62,7 +74,7 @@ class BusDriversParserTests {
     assertSame(originalBusStop, nextBusStop);
   }
 
-  private void assertBusStopsAreNotSame(final List<com.example.cycle16.BusDriver> busDrivers) {
+  private void assertBusStopsAreNotSame(final List<BusDriver> busDrivers) {
     assertEquals(2, busDrivers.size());
     final var driver1Stop1 = busDrivers.get(0).getCurrentBusStop();
     final var driver2Stop1 = busDrivers.get(1).getCurrentBusStop();

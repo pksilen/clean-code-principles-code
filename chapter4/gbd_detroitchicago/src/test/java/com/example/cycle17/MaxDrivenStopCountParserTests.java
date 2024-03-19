@@ -1,6 +1,5 @@
 package com.example.cycle17;
 
-import com.example.cycle16.MaxDrivenStopCountParserImpl;
 import org.junit.jupiter.api.Test;
 
 import java.util.InputMismatchException;
@@ -14,7 +13,7 @@ class MaxDrivenStopCountParserTests {
   void testParse_whenItSucceeds() {
     // GIVEN
     final var maxDrivenStopCountStr = "2";
-    final var parser = new com.example.cycle16.MaxDrivenStopCountParserImpl();
+    final var parser = new MaxDrivenStopCountParserImpl();
 
     // WHEN
     final var maxDrivenStopCount = parser.parse(maxDrivenStopCountStr);
