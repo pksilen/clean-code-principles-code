@@ -6,7 +6,7 @@ import throwError from './throwError';
 import throwException from './throwException';
 import AbstractAuthorizer from './AbstractAuthorizer';
 
-export default class JwtAuthorizer extends AbstractAuthorizer {
+class JwtAuthorizer extends AbstractAuthorizer {
   private readonly oidcConfigUrl: string;
   private readonly rolesClaimPath: string;
   private readonly getUsersUrl: string;
