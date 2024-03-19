@@ -11,11 +11,11 @@ public class BusDriversParserImpl implements BusDriversParser {
   private final Map<String, Rumor> nameToRumor = new HashMap<>();
 
   @Override
-  public List<BusDriver> parse(List<String> busDriverSpecs) {
+  public List<BusDriver> parse(final List<String> busDriverSpecs) {
     return busDriverSpecs.stream().map(this::getBusDriver).toList();
   }
 
-  private BusDriver getBusDriver(String busDriverSpec) {
+  private BusDriver getBusDriver(final String busDriverSpec) {
     final var parts = busDriverSpec.split(";");
     final var busStopName = parts[0];
     final var rumorName = parts[1];
