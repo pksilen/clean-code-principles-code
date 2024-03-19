@@ -8,8 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Set;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BusStopImplTests {
@@ -42,6 +41,20 @@ class BusStopImplTests {
 
     // THEN
     assertAllRumorsAreSet(busDrivers);
+  }
+
+  @Test
+  void testShareRumorsWithDrivers_whenDriverIsRemoved() {
+    // GIVEN
+    final var busStop = new BusStopImpl();
+    busStop.add(busDriverMock1);
+
+    // WHEN
+    busStop.remove(busDriverMock1);
+    busStop.shareRumorsWithDrivers();
+
+    // THEN
+    verify(busDriverMock1, never()).setRumors(any());
   }
 
   private void assertAllRumorsAreSet(final List<BusDriver> busDrivers) {

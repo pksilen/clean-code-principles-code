@@ -19,13 +19,13 @@ public class BusStopImpl implements BusStop {
   }
 
   @Override
-  public void add(BusDriver busDriver) {
+  public void add(final BusDriver busDriver) {
     busDrivers.add(busDriver);
   }
 
   @Override
-  public void remove(BusDriver busDriver) {
-
+  public void remove(final BusDriver busDriver) {
+    busDrivers.remove(busDriver);
   }
 }
 
