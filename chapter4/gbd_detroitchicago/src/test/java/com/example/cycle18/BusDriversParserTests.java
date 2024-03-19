@@ -66,6 +66,20 @@ class BusDriversParserTests {
     assertEquals(busDrivers.get(0).getRumors(), busDrivers.get(1).getRumors());
   }
 
+  @Test
+  void testParse_withMultipleDriversAndMultipleBusStopsWhereFirstIsCommon() {
+    // GIVEN
+    final var busDriverSpec1 = "bus-stop-a,bus-stop-b;rumor1";
+    final var busDriverSpec2 = "bus-stop-a,bus-stop-c;rumor2";
+    final var parser = new BusDriversParserImpl();
+
+    // WHEN
+    final var busDrivers = parser.parse(List.of(busDriverSpec1, busDriverSpec2));
+
+    // THEN
+    assertOnlyFirstBusStopIsSame(busDrivers);
+  }
+
   private void assertHasCircularBusRouteWithOneStop(final List<BusDriver> busDrivers) {
     assertEquals(1, busDrivers.size());
     final var busDriver = busDrivers.get(0);
@@ -85,6 +99,16 @@ class BusDriversParserTests {
     final var driver1Stop = busDrivers.get(0).getCurrentBusStop();
     final var driver2Stop = busDrivers.get(1).getCurrentBusStop();
     assertSame(driver1Stop, driver2Stop);
+  }
+
+  private void assertOnlyFirstBusStopIsSame(final List<BusDriver> busDrivers) {
+    final var driver1Stop1 = busDrivers.get(0).getCurrentBusStop();
+    final var driver2Stop1 = busDrivers.get(1).getCurrentBusStop();
+    assertSame(driver1Stop1, driver2Stop1);
+
+    final var driver1Stop2 = busDrivers.get(0).driveToNextBusStop();
+    final var driver2Stop2 = busDrivers.get(1).driveToNextBusStop();
+    assertNotSame(driver1Stop2, driver2Stop2);
   }
 }
 
