@@ -24,8 +24,10 @@ public class GossipingBusDrivers {
       shareRumors(busStops);
 
       if (allRumorsAreShared()) {
+        System.out.println("All rumors shared after stops: " + drivenStopCount); //NOSONAR
         return true;
       } else if (drivenStopCount == maxDrivenStopCount) {
+        System.out.println("Rumors not shared after stops: " + drivenStopCount); //NOSONAR
         return false;
       }
     }
