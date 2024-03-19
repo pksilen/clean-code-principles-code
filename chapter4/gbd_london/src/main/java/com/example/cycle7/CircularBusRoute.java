@@ -19,7 +19,7 @@ public class CircularBusRoute implements BusRoute {
   }
 
   @Override
-  public BusStop getNextBusStop(BusStop currentBusStop) {
+  public BusStop getNextBusStop(final BusStop currentBusStop) {
     return null;
   }
 }

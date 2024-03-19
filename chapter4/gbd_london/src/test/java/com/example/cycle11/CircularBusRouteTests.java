@@ -1,4 +1,4 @@
-package com.example.cycle9;
+package com.example.cycle11;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class CircularBusRouteTests {
   @Mock
-
   BusStop busStopMock1;
+
   @Mock
   BusStop busStopMock2;
 
@@ -63,6 +63,30 @@ class CircularBusRouteTests {
     assertThrows(IllegalArgumentException.class, () -> {
       busRoute.getNextBusStop(busStopMock2);
     });
+  }
+
+  @Test
+  void testGetNextBusStop_whenNextBusStopInListExists() {
+    // GIVEN
+    final var busRoute = new CircularBusRoute(List.of(busStopMock1, busStopMock2));
+
+    // WHEN
+    final var nextBusStop = busRoute.getNextBusStop(busStopMock1);
+
+    // THEN
+    assertSame(nextBusStop, busStopMock2);
+  }
+
+  @Test
+  void testGetNextBusStop_whenNoNextBusStopInList() {
+    // GIVEN
+    final var busRoute = new CircularBusRoute(List.of(busStopMock1, busStopMock2));
+
+    // WHEN
+    BusStop nextBusStop = busRoute.getNextBusStop(busStopMock2);
+
+    // THEN
+    assertSame(nextBusStop, busStopMock1);
   }
 }
 

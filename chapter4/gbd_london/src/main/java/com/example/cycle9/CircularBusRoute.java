@@ -19,11 +19,11 @@ public class CircularBusRoute implements BusRoute {
   }
 
   @Override
-  public BusStop getNextBusStop(BusStop currentBusStop) {
+  public BusStop getNextBusStop(final BusStop currentBusStop) {
     if (!busStops.contains(currentBusStop)) {
       throw new IllegalArgumentException("Bus stop does not belong to bus route");
     }
-    
+
     return busStops.get(0);
   }
 }

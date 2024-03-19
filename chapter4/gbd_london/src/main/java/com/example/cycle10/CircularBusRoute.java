@@ -19,7 +19,7 @@ public class CircularBusRoute implements BusRoute {
   }
 
   @Override
-  public BusStop getNextBusStop(BusStop currentBusStop) {
+  public BusStop getNextBusStop(final BusStop currentBusStop) {
     if (!busStops.contains(currentBusStop)) {
       throw new IllegalArgumentException("Bus stop does not belong to bus route");
     }
@@ -28,7 +28,7 @@ public class CircularBusRoute implements BusRoute {
       return busStops.get(0);
     }
 
-    int currentIndex = busStops.indexOf(currentBusStop);
+    final int currentIndex = busStops.indexOf(currentBusStop);
     return busStops.get(currentIndex + 1);
   }
 }

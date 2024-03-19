@@ -56,8 +56,10 @@ class CircularBusRouteTests {
 
   @Test
   void testGetNextBusStop_whenBusStopDoesNotBelongToRoute() {
+    // GIVEN
     final var busRoute = new CircularBusRoute(List.of(busStopMock1));
 
+    // WHEN + THEN
     assertThrows(IllegalArgumentException.class, () -> {
       busRoute.getNextBusStop(busStopMock2);
     });
@@ -65,8 +67,13 @@ class CircularBusRouteTests {
 
   @Test
   void testGetNextBusStop_whenNextBusStopInListExists() {
+    // GIVEN
     final var busRoute = new CircularBusRoute(List.of(busStopMock1, busStopMock2));
-    BusStop nextBusStop = busRoute.getNextBusStop(busStopMock1);
+
+    // WHEN
+    final var nextBusStop = busRoute.getNextBusStop(busStopMock1);
+
+    // THEN
     assertSame(nextBusStop, busStopMock2);
   }
 }

@@ -1,4 +1,4 @@
-package com.example.cycle8;
+package com.example.cycle11;
 
 import java.util.List;
 
@@ -20,7 +20,13 @@ public class CircularBusRoute implements BusRoute {
 
   @Override
   public BusStop getNextBusStop(final BusStop currentBusStop) {
-    return busStops.get(0);
+    if (!busStops.contains(currentBusStop)) {
+      throw new IllegalArgumentException("Bus stop does not belong to bus route");
+    }
+
+    final int currentIndex = busStops.indexOf(currentBusStop);
+    final int nextIndex = (currentIndex + 1) % busStops.size();
+    return busStops.get(nextIndex);
   }
 }
 
