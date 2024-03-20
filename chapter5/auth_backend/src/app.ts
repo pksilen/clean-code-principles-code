@@ -14,18 +14,18 @@ app.use((error, request, response, next) => {
   // is given in API principles chapter
 });
 
-app.get('/sales-item-service/sales-items', () => {
+app.get('/api/sales-item-service/sales-items', () => {
   // No authorization needed
   // Send sales items
 });
 
-app.post('/messaging-service/messages', (request, response) => {
+app.post('/api/messaging-service/messages', (request, response) => {
   authorizer.authorize(request.headers.authorization);
   // Authorized user can create a message
   console.log('Message created');
 });
 
-app.get('/order-service/orders/:id', (request, response) => {
+app.get('/api/order-service/orders/:id', (request, response) => {
   const userIdFromJwt = authorizer.getUserId(request.headers.authorization);
   const id = request.params.id;
 
@@ -40,7 +40,7 @@ app.get('/order-service/orders/:id', (request, response) => {
   // to an attacker whether an order with 'id' exists or not
 });
 
-app.post('/order-service/orders', (request, response) => {
+app.post('/api/order-service/orders', (request, response) => {
   authorizer.authorizeForSelf(
     request.body.userId,
     request.headers.authorization
@@ -50,7 +50,7 @@ app.post('/order-service/orders', (request, response) => {
   // User cannot create orders for other users
 });
 
-app.delete('/api/sales-items', (request, response) => {
+app.delete('/api/sales-item-service/sales-items', (request, response) => {
   authorizer.authorizeIfUserHasOneOfRoles(
     ['admin'],
     request.headers.authorization
@@ -59,4 +59,4 @@ app.delete('/api/sales-items', (request, response) => {
   // Only admin user can delete all sales items
 });
 
-app.listen(3000);
+app.listen(8000);

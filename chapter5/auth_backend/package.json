@@ -6,7 +6,7 @@
   "scripts": {
     "prebuild": "rimraf lib",
     "build": "tsc",
-    "run": "node lib/app.js"
+    "start": "node lib/app.js"
   },
   "author": "",
   "license": "ISC",

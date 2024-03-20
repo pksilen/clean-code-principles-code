@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node.js v18
+- Node.js v18 or later
 
 ## Start Keycloak
 
@@ -27,6 +27,24 @@ Password: bitnami
 6. For *Web origins*, supply http://127.0.0.1:5173
 7. Press *Save*
 
+## Build Server
+
+```bash
+npm run build
+```
+
+## Start Server
+
+```bash
+export OIDC_CONFIG_URL=http://localhost:8080/realms/master/.well-known/openid-configuration
+export JWT_ROLES_CLAIM_PATH=real_access.roles
+
+# Below service does not really exists but we must give some value to
+# environment variable
+export GET_USERS_URL=http://localhost:8082/user-service/users
+
+npm start
+```
 
 
 
