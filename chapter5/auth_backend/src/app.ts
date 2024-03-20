@@ -19,14 +19,14 @@ app.get('/api/sales-item-service/sales-items', () => {
   // Send sales items
 });
 
-app.post('/api/messaging-service/messages', (request, response) => {
-  authorizer.authorize(request.headers.authorization);
+app.post('/api/messaging-service/messages', async (request, response) => {
+  await authorizer.authorize(request.headers.authorization);
   // Authorized user can create a message
   console.log('Message created');
 });
 
-app.get('/api/order-service/orders/:id', (request, response) => {
-  const userIdFromJwt = authorizer.getUserId(request.headers.authorization);
+app.get('/api/order-service/orders/:id', async (request, response) => {
+  const userIdFromJwt = await authorizer.getUserId(request.headers.authorization);
   const id = request.params.id;
 
   // Try get order using 'userIdFromJwt' as user id and 'id'
@@ -40,8 +40,8 @@ app.get('/api/order-service/orders/:id', (request, response) => {
   // to an attacker whether an order with 'id' exists or not
 });
 
-app.post('/api/order-service/orders', (request, response) => {
-  authorizer.authorizeForSelf(
+app.post('/api/order-service/orders', async (request, response) => {
+  await authorizer.authorizeForSelf(
     request.body.userId,
     request.headers.authorization
   );
@@ -50,8 +50,8 @@ app.post('/api/order-service/orders', (request, response) => {
   // User cannot create orders for other users
 });
 
-app.delete('/api/sales-item-service/sales-items', (request, response) => {
-  authorizer.authorizeIfUserHasOneOfRoles(
+app.delete('/api/sales-item-service/sales-items', async (request, response) => {
+  await authorizer.authorizeIfUserHasOneOfRoles(
     ['admin'],
     request.headers.authorization
   );
