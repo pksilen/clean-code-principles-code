@@ -19,6 +19,7 @@ docker run --name mongodb -p 27017:27017 -d mongo:latest
 ```
 
 ## Create MySQL Database
+
 ```bash
 docker exec -it mysql bash
 # The below command asks for the password which is 'password'
