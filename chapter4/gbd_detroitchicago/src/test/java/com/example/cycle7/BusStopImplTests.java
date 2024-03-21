@@ -8,7 +8,6 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BusStopImplTests {
-
   @Test
   void testShareRumorsWithDrivers() {
     // GIVEN
