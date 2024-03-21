@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class BusDriversParserTests {
-
   @Test
   void testParse_withOneDriverOneBusStopAndOneRumor() {
     // GIVEN
