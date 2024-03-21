@@ -24,6 +24,20 @@ class CircularBusRouteTests {
   }
 
   @Test
+  void testGetFirstBusStop() {
+    // GIVEN
+    final var busStopA = new BusStopImpl();
+    final varbusStopB = new BusStopImpl();
+    final var busRoute = new CircularBusRoute(List.of(busStopA, busStopB));
+
+    // WHEN
+    final var firstBusStop = busRoute.getFirstBusStop();
+
+    / THEN
+    assertSame(firstBusStop, busStopA);
+  }
+
+  @Test
   void testGetNextBusStop_whenOneBusStop() {
     // GIVEN
     BusStop busStop = new BusStopImpl();
