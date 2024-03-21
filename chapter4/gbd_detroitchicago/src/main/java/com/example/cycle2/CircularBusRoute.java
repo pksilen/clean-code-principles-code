@@ -2,7 +2,7 @@ package com.example.cycle2;
 
 import java.util.List;
 
-public class CircularBusRoute extends BusRoute {
+public class CircularBusRoute implements BusRoute {
   private final List<BusStop> busStops;
 
   public CircularBusRoute(final List<BusStop> busStops) {
