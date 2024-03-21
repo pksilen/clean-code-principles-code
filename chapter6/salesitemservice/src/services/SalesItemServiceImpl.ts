@@ -3,48 +3,62 @@ import InputSalesItem from '../dtos/InputSalesItem';
 import OutputSalesItem from '../dtos/OutputSalesItem';
 import SalesItem from '../entities/SalesItem';
 import SalesItemRepository from '../repositories/SalesItemRepository';
+import EntityNotFoundError from '../errors/EntityNotFoundError';
 
 export default class SalesItemServiceImpl implements SalesItemService {
   constructor(private readonly salesItemRepository: SalesItemRepository) {}
 
-  createSalesItem(inputSalesItem: InputSalesItem): OutputSalesItem {
+  async createSalesItem(
+    inputSalesItem: InputSalesItem,
+  ): Promise<OutputSalesItem> {
     let salesItem = SalesItem.from(inputSalesItem);
-    salesItem = this.salesItemRepository.save(salesItem);
+    salesItem = await this.salesItemRepository.save(salesItem);
     return OutputSalesItem.from(salesItem);
   }
 
-  getSalesItems(): OutputSalesItem[] {
-    const salesItems = this.salesItemRepository.findAll();
-    return salesItems.map((salesItem) => OutputSalesItem.from(salesItem));
+  async getSalesItems(): Promise<OutputSalesItem[]> {
+    const salesItems = await this.salesItemRepository.findAll();
+    return await Promise.all(
+      salesItems.map(
+        async (salesItem) => await OutputSalesItem.from(salesItem),
+      ),
+    );
   }
 
-  getSalesItemsByUserAccountId(userAccountId: string): OutputSalesItem[] {
+  async getSalesItemsByUserAccountId(
+    userAccountId: string,
+  ): Promise<OutputSalesItem[]> {
     const salesItems =
-      this.salesItemRepository.findByUserAccountId(userAccountId);
+      await this.salesItemRepository.findByUserAccountId(userAccountId);
 
-    return salesItems.map((salesItem) => OutputSalesItem.from(salesItem));
+    return await Promise.all(
+      salesItems.map((salesItem) => OutputSalesItem.from(salesItem)),
+    );
   }
 
-  getSalesItem(id: string): OutputSalesItem {
-    const salesItem = this.salesItemRepository.find(id);
+  async getSalesItem(id: string): Promise<OutputSalesItem> {
+    const salesItem = await this.salesItemRepository.find(id);
 
     if (!salesItem) {
       throw new EntityNotFoundError('Sales item', id);
     }
 
-    return OutputSalesItem.from(salesItem);
+    return await OutputSalesItem.from(salesItem);
   }
 
-  updateSalesItem(id: string, inputSalesItem: InputSalesItem): void {
-    if (!this.salesItemRepository.find(id)) {
+  async updateSalesItem(
+    id: string,
+    inputSalesItem: InputSalesItem,
+  ): Promise<void> {
+    if (!(await this.salesItemRepository.find(id))) {
       throw new EntityNotFoundError('Sales item', id);
     }
 
     const salesItem = SalesItem.from(inputSalesItem);
-    this.salesItemRepository.update(id, salesItem);
+    return this.salesItemRepository.update(id, salesItem);
   }
 
-  deleteSalesItem(id: string): void {
-    this.salesItemRepository.delete(id);
+  deleteSalesItem(id: string): Promise<void> {
+    return this.salesItemRepository.delete(id);
   }
 }

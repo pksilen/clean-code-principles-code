@@ -1,14 +1,17 @@
 import {
-  Controller,
-  Get,
-  Query,
-  Post,
   Body,
-  Put,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
   Param,
-  Delete
+  Post,
+  Put,
+  Query,
 } from '@nestjs/common';
-import SalesItemService from '../SalesItemService';
+import SalesItemService from '../services/SalesItemService';
+import InputSalesItem from '../dtos/InputSalesItem';
+import OutputSalesItem from '../dtos/OutputSalesItem';
 
 @Controller('sales-items')
 export default class RestSalesItemController {
@@ -16,7 +19,7 @@ export default class RestSalesItemController {
 
   @Post()
   createSalesItem(
-    @Body() inputSalesItem: InputSalesItem
+    @Body() inputSalesItem: InputSalesItem,
   ): Promise<OutputSalesItem> {
     return this.salesItemService.createSalesItem(inputSalesItem);
   }
@@ -26,17 +29,14 @@ export default class RestSalesItemController {
     @Query('userAccountId') userAccountId: string,
   ): Promise<OutputSalesItem[]> {
     if (userAccountId) {
-      return this.salesItemService.getSalesItemsByUserAccountId
-      (
-        userAccountId
-      );
+      return this.salesItemService.getSalesItemsByUserAccountId(userAccountId);
     } else {
       return this.salesItemService.getSalesItems();
     }
   }
 
   @Get('/:id')
-  getSalesItem((@Param('id') id: string): Promise<OutputSalesItem> {
+  getSalesItem(@Param('id') id: string): Promise<OutputSalesItem> {
     return this.salesItemService.getSalesItem(id);
   }
 
@@ -44,8 +44,8 @@ export default class RestSalesItemController {
   @HttpCode(204)
   updateSalesItem(
     @Param('id') id: string,
-    @Body() inputSalesItemArg: InputSalesItem
-  ):Promise<void> {
+    @Body() inputSalesItem: InputSalesItem,
+  ): Promise<void> {
     return this.salesItemService.updateSalesItem(id, inputSalesItem);
   }
 
@@ -53,11 +53,5 @@ export default class RestSalesItemController {
   @HttpCode(204)
   deleteSalesItem(@Param('id') id: string): Promise<void> {
     return this.salesItemService.deleteSalesItem(id);
-  }
-
-  @Delete()
-  @HttpCode(204)
-  deleteSalesItems(): Promise<void> {
-    return this.salesItemService.deleteSalesItems();
   }
 }
