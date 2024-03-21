@@ -22,5 +22,4 @@ public class CircularBusRoute implements BusRoute {
     
     return busStops.get(0);
   }
-
 }
