@@ -25,13 +25,10 @@ export default class SalesItem {
     this._images = args.images;
   }
 
-  static from(
-    inputSalesItem: InputSalesItem,
-    id_: string | null = null,
-  ): SalesItem {
+  static from(inputSalesItem: InputSalesItem, id?: string): SalesItem {
     return new SalesItem({
       ...inputSalesItem,
-      id: id_ || uuidv4(),
+      id: id ?? uuidv4(),
       createdAtTimestampInMs: Math.round(Date.now()),
       images: inputSalesItem.images.map(
         (image: any) => new SalesItemImage(image),

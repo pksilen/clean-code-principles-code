@@ -6,11 +6,9 @@ export default interface SalesItemRepository {
 
   findAll(): Promise<SalesItem[]>;
 
-  findByUserAccountId(userAccountId: string): Promise<SalesItem[]>;
-
   find(id: string): Promise<SalesItem | null>;
 
-  update(id: string, inputSalesItem: InputSalesItem): Promise<void>;
+  update(inputSalesItem: InputSalesItem): Promise<void>;
 
   delete(id: string): Promise<void>;
 }

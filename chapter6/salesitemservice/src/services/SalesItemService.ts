@@ -8,10 +8,6 @@ export default interface SalesItemService {
 
   getSalesItem(id: string): Promise<OutputSalesItem>;
 
-  getSalesItemsByUserAccountId(
-    userAccountId: string,
-  ): Promise<OutputSalesItem[]>;
-
   updateSalesItem(id: string, inputSalesItem: InputSalesItem): Promise<void>;
 
   deleteSalesItem(id: string): Promise<void>;

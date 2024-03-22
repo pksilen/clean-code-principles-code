@@ -1,9 +1,10 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import DbSalesItem from './DbSalesItem';
 
 @Entity()
 export default class DbSalesItemImage {
-  @Column()
-  id: number;
+  @PrimaryColumn()
+  id: string;
 
   @Column()
   salesItemId: number;
@@ -13,4 +14,10 @@ export default class DbSalesItemImage {
 
   @Column()
   url: string;
+
+  @ManyToOne(() => DbSalesItem, (dbSalesItem) => dbSalesItem.images, {
+    cascade: true,
+    eager: true,
+  })
+  dbSalesItem: DbSalesItem;
 }

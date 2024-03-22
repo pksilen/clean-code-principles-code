@@ -3,73 +3,88 @@ import SalesItemRepository from './SalesItemRepository';
 import SalesItem from '../entities/SalesItem';
 import DatabaseError from '../errors/DatabaseError';
 
-class MongoDbSalesItemRepository implements SalesItemRepository {
-  private client: mongodb.MongoClient;
-  private db: mongodb.Db; // For database instance
-  private salesItemsCollection: mongodb.Collection;
+export default class MongoDbSalesItemRepository implements SalesItemRepository {
+  private readonly client: mongodb.MongoClient;
+  private salesItemsCollection: mongodb.Collection | undefined;
 
   constructor() {
     try {
-      const databaseUrl = process.env.DATABASE_URL || '';
+      const databaseUrl = process.env.DATABASE_URL ?? '';
       this.client = new mongodb.MongoClient(databaseUrl);
       const databaseName = databaseUrl.split('/')[3];
 
-      // Connect and fetch the relevant database and collection
       this.client.connect().then(() => {
-        this.db = this.client.db(databaseName);
-        this.salesItemsCollection = this.db.collection('salesitems');
+        const db = this.client.db(databaseName);
+        this.salesItemsCollection = db.collection('salesitems');
       });
     } catch (error) {
-      // Log error appropriately
-      throw error;
+      // Handle error
     }
   }
 
   async save(salesItem: SalesItem): Promise<void> {
+    if (!this.salesItemsCollection) {
+      throw new DatabaseError(new Error('Not ready'));
+    }
+
     try {
-      const salesItemDoc = this.toDocument(salesItem);
-      await this.salesItemsCollection.insertOne(salesItemDoc);
+      const salesItemDocument =
+        MongoDbSalesItemRepository.toDocument(salesItem);
+
+      await this.salesItemsCollection.insertOne(salesItemDocument);
     } catch (error) {
-      if (error instanceof mongodb.MongoError) {
-        throw new DatabaseError(error.message);
-      } else {
-        throw error; // Rethrow other error types
-      }
+      throw new DatabaseError(error);
     }
   }
 
   async findAll(): Promise<SalesItem[]> {
+    if (!this.salesItemsCollection) {
+      throw new DatabaseError(new Error('Not ready'));
+    }
+
     try {
       const cursor = this.salesItemsCollection.find();
-      const salesItemDocs = await cursor.toArray();
+      const salesItemDocuments = await cursor.toArray();
 
-      return salesItemDocs.map((doc) => this.toDomainEntity(doc));
+      return salesItemDocuments.map((salesItemDocument) =>
+        this.toDomainEntity(salesItemDocument),
+      );
     } catch (error) {
-      // Same error handling as above
-      throw new DatabaseError(error.message);
+      throw new DatabaseError(error);
     }
   }
 
   async find(id: string): Promise<SalesItem | null> {
+    if (!this.salesItemsCollection) {
+      throw new DatabaseError(new Error('Not ready'));
+    }
+
     try {
-      const salesItemDoc = await this.salesItemsCollection.findOne({
+      const salesItemDocument = await this.salesItemsCollection.findOne({
         _id: new mongodb.ObjectId(id),
       });
-      return salesItemDoc ? this.toDomainEntity(salesItemDoc) : null;
+
+      return salesItemDocument ? this.toDomainEntity(salesItemDocument) : null;
     } catch (error) {
-      throw new DatabaseError(error.message);
+      throw new DatabaseError(error);
     }
   }
 
   async update(salesItem: SalesItem): Promise<void> {
+    if (!this.salesItemsCollection) {
+      throw new DatabaseError(new Error('Not ready'));
+    }
+
     try {
       const filter = { _id: new mongodb.ObjectId(salesItem.id) };
+
       const update = {
-        $set: this.toDocumentWithout(salesItem, [
+        $set: MongoDbSalesItemRepository.toDocumentWithout(salesItem, [
           '_id',
           'createdAtTimestampInMs',
         ]),
       };
+
       await this.salesItemsCollection.updateOne(filter, update);
     } catch (error) {
       throw new DatabaseError(error.message);
@@ -77,7 +92,17 @@ class MongoDbSalesItemRepository implements SalesItemRepository {
   }
 
   async delete(id: string): Promise<void> {
-    // ... (Similar to other methods)
+    if (!this.salesItemsCollection) {
+      throw new DatabaseError(new Error('Not ready'));
+    }
+
+    try {
+      await this.salesItemsCollection.deleteOne({
+        _id: new mongodb.ObjectId(id),
+      });
+    } catch (error) {
+      throw new DatabaseError(error);
+    }
   }
 
   private toDomainEntity(salesItemDoc: mongodb.Document): SalesItem {
@@ -106,7 +131,7 @@ class MongoDbSalesItemRepository implements SalesItemRepository {
     const fullDocument = MongoDbSalesItemRepository.toDocument(salesItem);
 
     return Object.fromEntries(
-      Object.entries(fullDocument).filter(([key, _]) => !keys.includes(key)),
+      Object.entries(fullDocument).filter(([key]) => !keys.includes(key)),
     );
   }
 }

@@ -1,3 +1,4 @@
+import { Inject, Injectable } from '@nestjs/common';
 import SalesItemService from './SalesItemService';
 import InputSalesItem from '../dtos/InputSalesItem';
 import OutputSalesItem from '../dtos/OutputSalesItem';
@@ -5,14 +6,18 @@ import SalesItem from '../entities/SalesItem';
 import SalesItemRepository from '../repositories/SalesItemRepository';
 import EntityNotFoundError from '../errors/EntityNotFoundError';
 
+@Injectable()
 export default class SalesItemServiceImpl implements SalesItemService {
-  constructor(private readonly salesItemRepository: SalesItemRepository) {}
+  constructor(
+    @Inject('salesItemRepository')
+    private readonly salesItemRepository: SalesItemRepository,
+  ) {}
 
   async createSalesItem(
     inputSalesItem: InputSalesItem,
   ): Promise<OutputSalesItem> {
-    let salesItem = SalesItem.from(inputSalesItem);
-    salesItem = await this.salesItemRepository.save(salesItem);
+    const salesItem = SalesItem.from(inputSalesItem);
+    await this.salesItemRepository.save(salesItem);
     return OutputSalesItem.from(salesItem);
   }
 
@@ -22,17 +27,6 @@ export default class SalesItemServiceImpl implements SalesItemService {
       salesItems.map(
         async (salesItem) => await OutputSalesItem.from(salesItem),
       ),
-    );
-  }
-
-  async getSalesItemsByUserAccountId(
-    userAccountId: string,
-  ): Promise<OutputSalesItem[]> {
-    const salesItems =
-      await this.salesItemRepository.findByUserAccountId(userAccountId);
-
-    return await Promise.all(
-      salesItems.map((salesItem) => OutputSalesItem.from(salesItem)),
     );
   }
 
@@ -54,8 +48,8 @@ export default class SalesItemServiceImpl implements SalesItemService {
       throw new EntityNotFoundError('Sales item', id);
     }
 
-    const salesItem = SalesItem.from(inputSalesItem);
-    return this.salesItemRepository.update(id, salesItem);
+    const salesItem = SalesItem.from(inputSalesItem, id);
+    return this.salesItemRepository.update(salesItem);
   }
 
   deleteSalesItem(id: string): Promise<void> {

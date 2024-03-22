@@ -1,7 +1,8 @@
-import mysql from 'mysql2/promise';
+import mysql, { Pool } from 'mysql2/promise';
 import SalesItemRepository from './SalesItemRepository';
 import SalesItem from '../entities/SalesItem';
 import DatabaseError from 'src/errors/DatabaseError';
+import SalesItemImage from '../entities/SalesItemImage';
 
 interface DatabaseConfig {
   user: string;
@@ -14,17 +15,19 @@ interface DatabaseConfig {
 }
 
 class ParamSqlSalesItemRepository implements SalesItemRepository {
-  private connConfig: DatabaseConfig;
+  private readonly connectionPool: Pool;
 
   constructor() {
-    this.connConfig = ParamSqlSalesItemRepository.tryCreateConnConfig();
+    const connConfig = ParamSqlSalesItemRepository.tryCreateConnConfig();
+    this.connectionPool = mysql.createPool(connConfig);
     this.tryCreateDbTablesIfNeeded();
   }
 
   async save(salesItem: SalesItem): Promise<void> {
-    let connection;
+    let connection: mysql.PoolConnection | undefined;
+
     try {
-      connection = await mysql.createConnection(this.connConfig);
+      connection = await this.connectionPool.getConnection();
 
       await connection.execute(
         'INSERT INTO salesitems (id, createdAtTimestampInMs, name, priceInCents) VALUES (?, ?, ?, ?)',
@@ -41,20 +44,20 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
         salesItem.id,
         salesItem.images,
       );
+
       await connection.commit();
     } catch (error) {
       throw new DatabaseError(error);
     } finally {
-      if (connection) {
-        connection.end();
-      }
+      connection?.release();
     }
   }
 
   async findAll(): Promise<SalesItem[]> {
-    let connection;
+    let connection: mysql.PoolConnection | undefined;
+
     try {
-      connection = await mysql.createConnection(this.connConfig);
+      connection = await this.connectionPool.getConnection();
       const [rows] = await connection.execute(
         'SELECT s.id, s.createdAtTimestampInMs, s.name, s.priceInCents, si.id, si.rank, si.url ' +
           'FROM salesitems s LEFT JOIN salesitemimages si ON si.salesItemId = s.id',
@@ -64,16 +67,16 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
     } catch (error) {
       throw new DatabaseError(error);
     } finally {
-      if (connection) {
-        connection.end();
-      }
+      connection?.release();
     }
   }
 
   async find(id: string): Promise<SalesItem | null> {
-    let connection;
+    let connection: mysql.PoolConnection | undefined;
+
     try {
-      connection = await mysql.createConnection(this.connConfig);
+      connection = await this.connectionPool.getConnection();
+
       const [rows] = await connection.execute(
         'SELECT s.id, s.createdAtTimestampInMs, s.name, s.priceInCents, si.id, si.rank, si.url ' +
           'FROM salesitems s LEFT JOIN salesitemimages si ON si.salesItemId = s.id WHERE s.id = ?',
@@ -84,16 +87,15 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
     } catch (error) {
       throw new DatabaseError(error);
     } finally {
-      if (connection) {
-        connection.end();
-      }
+      connection?.release();
     }
   }
 
   async update(salesItem: SalesItem): Promise<void> {
-    let connection;
+    let connection: mysql.PoolConnection | undefined;
+
     try {
-      connection = await mysql.createConnection(this.connConfig);
+      connection = await this.connectionPool.getConnection();
 
       await connection.execute(
         'UPDATE salesitems SET name = ?, priceInCents = ? WHERE id = ?',
@@ -110,32 +112,32 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
         salesItem.id,
         salesItem.images,
       );
+
       await connection.commit();
     } catch (error) {
       throw new DatabaseError(error);
     } finally {
-      if (connection) {
-        connection.end();
-      }
+      connection?.release();
     }
   }
 
   async delete(id: string): Promise<void> {
-    let connection;
+    let connection: mysql.PoolConnection | undefined;
+
     try {
-      connection = await mysql.createConnection(this.connConfig);
+      connection = await this.connectionPool.getConnection();
+
       await connection.execute(
         'DELETE FROM salesitemimages WHERE salesItemId = ?',
         [id],
       );
+
       await connection.execute('DELETE FROM salesitems WHERE id = ?', [id]);
       await connection.commit();
     } catch (error) {
       throw new DatabaseError(error);
     } finally {
-      if (connection) {
-        connection.end();
-      }
+      connection?.release();
     }
   }
 
@@ -146,7 +148,7 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
       throw new Error('DATABASE_URL environment variable is not set');
     }
 
-    const [_, authAndHost, path] = databaseUrl.split('/');
+    const [, authAndHost, path] = databaseUrl.split('/');
     const [userAndPassword, hostAndPort] = authAndHost.split('@');
     const [user, password] = userAndPassword.split(':');
     const [host, portString] = hostAndPort.split(':');
@@ -159,13 +161,13 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
       host,
       port,
       database,
-      poolName: 'salesitems', // Optional
-      poolSize: 25, // Optional
+      poolName: 'salesitems',
+      poolSize: 25,
     };
   }
 
   async tryCreateDbTablesIfNeeded(): Promise<void> {
-    const connection = await mysql.createConnection(this.connConfig);
+    const connection = await this.connectionPool.getConnection();
 
     try {
       const createSalesItemsTableQuery = `
@@ -183,7 +185,7 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
       const createSalesItemImagesTableQuery = `
                 CREATE TABLE IF NOT EXISTS salesitemimages (
                     id VARCHAR(36) NOT NULL,
-                    \`rank\` INTEGER NOT NULL, 
+                    \`rank\` INTEGER NOT NULL,
                     url VARCHAR(2084) NOT NULL,
                     salesItemId VARCHAR(36) NOT NULL,
                     PRIMARY KEY (id),
@@ -192,13 +194,11 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
             `;
 
       await connection.execute(createSalesItemImagesTableQuery);
-
-      await connection.commit(); // Commit the changes
+      await connection.commit();
     } catch (error) {
-      // Handle potential errors during table creation
       throw new Error(`Error creating tables: ${error.message}`);
     } finally {
-      connection.end(); // Close the connection
+      connection.release();
     }
   }
 
@@ -221,37 +221,23 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
   }
 
   private getSalesItems(cursor: any): SalesItem[] {
-    // Adjust cursor type if needed
     const idToSalesItem: Record<string, SalesItem> = {};
 
     for (const row of cursor) {
-      const {
-        id,
-        createdAtTimestampInMs,
-        name,
-        priceInCents,
-        imageId,
-        imageRank,
-        imageUrl,
-      } = row;
-
-      if (!idToSalesItem[id]) {
-        idToSalesItem[id] = new SalesItem(
-          id,
-          createdAtTimestampInMs,
-          name,
-          priceInCents,
-          [],
-        );
+      if (!idToSalesItem[row.id]) {
+        idToSalesItem[row.id] = SalesItem.from(row);
       }
 
-      if (imageId) {
-        idToSalesItem[id].images.push(
-          new SalesItemImage(imageId, imageRank, imageUrl),
+      if (row.imageId) {
+        idToSalesItem[row.id].images.push(
+          new SalesItemImage({
+            id: row.imageId,
+            rank: row.imageRank,
+            url: row.imageUrl,
+          }),
         );
       }
     }
-
     return Object.values(idToSalesItem);
   }
 }

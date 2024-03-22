@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  Inject,
   Param,
   Post,
   Put,
@@ -15,7 +16,10 @@ import OutputSalesItem from '../dtos/OutputSalesItem';
 
 @Controller('sales-items')
 export default class RestSalesItemController {
-  constructor(private readonly salesItemService: SalesItemService) {}
+  constructor(
+    @Inject('salesItemService')
+    private readonly salesItemService: SalesItemService,
+  ) {}
 
   @Post()
   createSalesItem(
