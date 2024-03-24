@@ -9,13 +9,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
 
+  // Highest priority global filter is the last one
   app.useGlobalFilters(
+    new ErrorFilter(),
     new SalesItemServiceErrorFilter(),
     new ValidationErrorFilter(),
-    new ErrorFilter(),
   );
 
-  await app.listen(3000);
+  await app.listen(8000);
 }
 
 bootstrap();

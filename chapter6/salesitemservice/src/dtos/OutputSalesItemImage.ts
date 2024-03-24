@@ -1,8 +1,7 @@
-import { IsInt, IsPositive } from 'class-validator';
 import InputSalesItemImage from './InputSalesItemImage';
+import { MaxLength } from 'class-validator';
 
 export default class OutputSalesItemImage extends InputSalesItemImage {
-  @IsInt()
-  @IsPositive()
-  id: number;
+  @MaxLength(36)
+  id: string;
 }

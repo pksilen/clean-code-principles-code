@@ -8,7 +8,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 import SalesItemService from '../services/SalesItemService';
 import InputSalesItem from '../dtos/InputSalesItem';
@@ -29,14 +28,9 @@ export default class RestSalesItemController {
   }
 
   @Get()
-  getSalesItems(
-    @Query('userAccountId') userAccountId: string,
-  ): Promise<OutputSalesItem[]> {
-    if (userAccountId) {
-      return this.salesItemService.getSalesItemsByUserAccountId(userAccountId);
-    } else {
-      return this.salesItemService.getSalesItems();
-    }
+  getSalesItems() // @Query('userAccountId') userAccountId: string,
+  : Promise<OutputSalesItem[]> {
+    return this.salesItemService.getSalesItems();
   }
 
   @Get('/:id')

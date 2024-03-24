@@ -7,7 +7,7 @@ interface ErrorResponse {
   errorCode: string;
   errorMessage: string;
   errorDescription: string;
-  stackTrace: string;
+  stackTrace: string | undefined;
 }
 
 const statusCodeToText: Record<number, string> = {
@@ -46,6 +46,6 @@ export function createErrorResponse(
   };
 }
 
-export function getStackTrace(error: Error) {
-  return process.env.ENV !== 'production' ? error.stack : undefined;
+export function getStackTrace(error?: Error) {
+  return process.env.ENV !== 'production' ? error?.stack : undefined;
 }

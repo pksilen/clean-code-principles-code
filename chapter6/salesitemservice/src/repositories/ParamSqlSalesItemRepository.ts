@@ -173,7 +173,7 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
       const createSalesItemsTableQuery = `
                 CREATE TABLE IF NOT EXISTS salesitems (
                     id VARCHAR(36) NOT NULL,
-                    createdAtTimestampInMs BIGINT NOT NULL,
+                    createdAtTimestampInMs INTEGER NOT NULL,
                     name VARCHAR(256) NOT NULL,
                     priceInCents INTEGER NOT NULL,
                     PRIMARY KEY (id)

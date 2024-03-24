@@ -2,9 +2,9 @@ import { v4 as uuidv4 } from 'uuid';
 import InputSalesItem from '../dtos/InputSalesItem';
 import SalesItemImage from './SalesItemImage';
 
-type Args = {
+type ConstructorArgs = {
   id: string;
-  createdAtTimestampInMs: number;
+  createdAtTimestampInMs: string;
   name: string;
   priceInCents: number;
   images: SalesItemImage[];
@@ -12,12 +12,12 @@ type Args = {
 
 export default class SalesItem {
   private _id: string;
-  private _createdAtTimestampInMs: number;
+  private _createdAtTimestampInMs: string;
   private _name: string;
   private _priceInCents: number;
   private _images: SalesItemImage[];
 
-  constructor(args: Args) {
+  constructor(args: ConstructorArgs) {
     this._id = args.id;
     this._createdAtTimestampInMs = args.createdAtTimestampInMs;
     this._name = args.name;
@@ -29,8 +29,8 @@ export default class SalesItem {
     return new SalesItem({
       ...inputSalesItem,
       id: id ?? uuidv4(),
-      createdAtTimestampInMs: Math.round(Date.now()),
-      images: inputSalesItem.images.map(
+      createdAtTimestampInMs: Date.now().toString(),
+      images: (inputSalesItem.images ?? []).map(
         (image: any) => new SalesItemImage(image),
       ),
     });
@@ -40,7 +40,7 @@ export default class SalesItem {
     return this._id;
   }
 
-  get createdAtTimestampInMs(): number {
+  get createdAtTimestampInMs(): string {
     return this._createdAtTimestampInMs;
   }
 

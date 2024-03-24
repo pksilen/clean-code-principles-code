@@ -2,13 +2,13 @@ import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import DbSalesItemImage from './DbSalesItemImage';
 import SalesItem from '../../../entities/SalesItem';
 
-@Entity()
+@Entity('salesitems')
 export default class DbSalesItem {
   @PrimaryColumn()
   id: string;
 
-  @Column()
-  createdAtTimestampInMs: number;
+  @Column({ type: 'bigint' })
+  createdAtTimestampInMs: string;
 
   @Column()
   name: string;
@@ -18,7 +18,8 @@ export default class DbSalesItem {
 
   @OneToMany(
     () => DbSalesItemImage,
-    (dbSalesItemImage) => dbSalesItemImage.dbSalesItem,
+    (dbSalesItemImage) => dbSalesItemImage.salesItem,
+    { cascade: true, eager: true },
   )
   images: DbSalesItemImage[];
 
@@ -41,6 +42,6 @@ export default class DbSalesItem {
   }
 
   toDomainEntity(): SalesItem {
-    return SalesItem.from(this);
+    return SalesItem.from(this, this.id);
   }
 }

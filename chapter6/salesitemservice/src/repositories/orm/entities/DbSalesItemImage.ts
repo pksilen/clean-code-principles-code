@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import DbSalesItem from './DbSalesItem';
 
-@Entity()
+@Entity('salesitemimages')
 export default class DbSalesItemImage {
   @PrimaryColumn()
   id: string;
@@ -15,9 +15,8 @@ export default class DbSalesItemImage {
   @Column()
   url: string;
 
-  @ManyToOne(() => DbSalesItem, (dbSalesItem) => dbSalesItem.images, {
-    cascade: true,
-    eager: true,
+  @ManyToOne(() => DbSalesItem, (salesItem) => salesItem.images, {
+    onDelete: 'CASCADE',
   })
-  dbSalesItem: DbSalesItem;
+  salesItem: DbSalesItem;
 }

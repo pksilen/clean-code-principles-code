@@ -1,17 +1,41 @@
 import InputSalesItem from './InputSalesItem';
-import { IsInt, IsPositive, MaxLength } from 'class-validator';
+import {
+  ArrayMaxSize,
+  MaxLength,
+  ValidateNested,
+  validateOrReject,
+} from 'class-validator';
 import SalesItem from '../entities/SalesItem';
-import { transformAndValidate } from 'class-transformer-validator';
+import OutputSalesItemImage from './OutputSalesItemImage';
 
 export default class OutputSalesItem extends InputSalesItem {
-  @MaxLength(256)
+  @MaxLength(36)
   id: string;
 
-  @IsInt()
-  @IsPositive()
-  createdAtTimestampInMs: number;
+  @MaxLength(20)
+  createdAtTimestampInMs: string;
+
+  @ValidateNested()
+  @ArrayMaxSize(25)
+  images: OutputSalesItemImage[];
 
   static async from(salesItem: SalesItem): Promise<OutputSalesItem> {
-    return await transformAndValidate(OutputSalesItem, salesItem);
+    const outputSalesItem = new OutputSalesItem();
+    outputSalesItem.id = salesItem.id;
+    outputSalesItem.createdAtTimestampInMs = salesItem.createdAtTimestampInMs;
+    outputSalesItem.name = salesItem.name;
+    outputSalesItem.priceInCents = salesItem.priceInCents;
+
+    outputSalesItem.images = salesItem.images.map((salesItemImage) => {
+      const outputSalesItemImage = new OutputSalesItemImage();
+      outputSalesItemImage.id = salesItemImage.id;
+      outputSalesItemImage.rank = salesItemImage.rank;
+      outputSalesItemImage.url = salesItemImage.url;
+      return outputSalesItemImage;
+    });
+
+    console.log(outputSalesItem);
+    await validateOrReject(outputSalesItem);
+    return outputSalesItem;
   }
 }
