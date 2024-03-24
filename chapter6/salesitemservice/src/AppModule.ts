@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import RestSalesItemController from './controllers/RestSalesItemController';
 import SalesItemServiceImpl from './services/SalesItemServiceImpl';
-import TypeOrmSalesItemRepository from './repositories/orm/TypeOrmSalesItemRepository';
+import ParamSqlSalesItemRepository from './repositories/ParamSqlSalesItemRepository';
 
 @Module({
   imports: [],
@@ -13,7 +13,7 @@ import TypeOrmSalesItemRepository from './repositories/orm/TypeOrmSalesItemRepos
     },
     {
       provide: 'salesItemRepository',
-      useClass: TypeOrmSalesItemRepository,
+      useClass: ParamSqlSalesItemRepository,
     },
   ],
 })

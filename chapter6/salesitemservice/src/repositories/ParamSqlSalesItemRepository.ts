@@ -1,8 +1,9 @@
-import mysql, { Pool } from 'mysql2/promise';
+import * as mysql from 'mysql2/promise';
 import SalesItemRepository from './SalesItemRepository';
 import SalesItem from '../entities/SalesItem';
 import DatabaseError from 'src/errors/DatabaseError';
 import SalesItemImage from '../entities/SalesItemImage';
+import { getDbConnProperties } from '../utils/utils';
 
 interface DatabaseConfig {
   user: string;
@@ -14,8 +15,10 @@ interface DatabaseConfig {
   poolSize?: number; // Optional
 }
 
-class ParamSqlSalesItemRepository implements SalesItemRepository {
-  private readonly connectionPool: Pool;
+export default class ParamSqlSalesItemRepository
+  implements SalesItemRepository
+{
+  private readonly connectionPool: mysql.Pool;
 
   constructor() {
     const connConfig = ParamSqlSalesItemRepository.tryCreateConnConfig();
@@ -59,7 +62,8 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
     try {
       connection = await this.connectionPool.getConnection();
       const [rows] = await connection.execute(
-        'SELECT s.id, s.createdAtTimestampInMs, s.name, s.priceInCents, si.id, si.rank, si.url ' +
+        'SELECT s.id, s.createdAtTimestampInMs, s.name, s.priceInCents, ' +
+          'si.id as imageId, si.rank as imageRank, si.url as imageUrl ' +
           'FROM salesitems s LEFT JOIN salesitemimages si ON si.salesItemId = s.id',
       );
 
@@ -78,7 +82,8 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
       connection = await this.connectionPool.getConnection();
 
       const [rows] = await connection.execute(
-        'SELECT s.id, s.createdAtTimestampInMs, s.name, s.priceInCents, si.id, si.rank, si.url ' +
+        'SELECT s.id, s.createdAtTimestampInMs, s.name, s.priceInCents, ' +
+          'si.id as imageId, si.rank as imageRank, si.url as imageUrl ' +
           'FROM salesitems s LEFT JOIN salesitemimages si ON si.salesItemId = s.id WHERE s.id = ?',
         [id],
       );
@@ -142,18 +147,7 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
   }
 
   private static tryCreateConnConfig(): DatabaseConfig {
-    const databaseUrl = process.env.DATABASE_URL;
-
-    if (!databaseUrl) {
-      throw new Error('DATABASE_URL environment variable is not set');
-    }
-
-    const [, authAndHost, path] = databaseUrl.split('/');
-    const [userAndPassword, hostAndPort] = authAndHost.split('@');
-    const [user, password] = userAndPassword.split(':');
-    const [host, portString] = hostAndPort.split(':');
-    const port = parseInt(portString, 10);
-    const database = path.slice(1);
+    const { user, password, host, port, database } = getDbConnProperties();
 
     return {
       user,
@@ -161,7 +155,6 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
       host,
       port,
       database,
-      poolName: 'salesitems',
       poolSize: 25,
     };
   }
@@ -173,7 +166,7 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
       const createSalesItemsTableQuery = `
                 CREATE TABLE IF NOT EXISTS salesitems (
                     id VARCHAR(36) NOT NULL,
-                    createdAtTimestampInMs INTEGER NOT NULL,
+                    createdAtTimestampInMs BIGINT NOT NULL,
                     name VARCHAR(256) NOT NULL,
                     priceInCents INTEGER NOT NULL,
                     PRIMARY KEY (id)
@@ -225,7 +218,7 @@ class ParamSqlSalesItemRepository implements SalesItemRepository {
 
     for (const row of cursor) {
       if (!idToSalesItem[row.id]) {
-        idToSalesItem[row.id] = SalesItem.from(row);
+        idToSalesItem[row.id] = SalesItem.from(row, row.id);
       }
 
       if (row.imageId) {

@@ -49,3 +49,19 @@ export function createErrorResponse(
 export function getStackTrace(error?: Error) {
   return process.env.ENV !== 'production' ? error?.stack : undefined;
 }
+
+export function getDbConnProperties() {
+  const databaseUrl = process.env.DATABASE_URL;
+
+  if (!databaseUrl) {
+    throw new Error('DATABASE_URL environment variable is not set');
+  }
+
+  const [, , authAndHost, path] = databaseUrl.split('/');
+  const [userAndPassword, hostAndPort] = authAndHost.split('@');
+  const [user, password] = userAndPassword.split(':');
+  const [host, portString] = hostAndPort.split(':');
+  const port = parseInt(portString, 10);
+  const database = path;
+  return { user, password, host, port, database };
+}

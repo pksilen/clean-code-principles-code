@@ -45,10 +45,9 @@ export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/salesitemservic
 export REPOSITORY_TYPE=orm
 export REPOSITORY_TYPE=paramsql
 
-cd ..
-uvicorn salesitemservice.app:app
+npm run start:dev
 ```
 
-Sample HTTP requests are available in scratches/salesitemservice_rest.http and 
+Sample HTTP requests are available in scratches/salesitemservice_rest.http and
 scratches/salesitemservice_graphql.http files.
 You can use these requests with the PyCharm Professional's HTTP client.

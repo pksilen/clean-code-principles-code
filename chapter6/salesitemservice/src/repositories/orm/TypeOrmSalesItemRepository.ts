@@ -5,6 +5,7 @@ import DatabaseError from '../../errors/DatabaseError';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import DbSalesItemImage from './entities/DbSalesItemImage';
+import { getDbConnProperties } from '../../utils/utils';
 
 @Injectable()
 export default class TypeOrmSalesItemRepository implements SalesItemRepository {
@@ -12,13 +13,15 @@ export default class TypeOrmSalesItemRepository implements SalesItemRepository {
   private isDataSourceInitialized = false;
 
   constructor() {
+    const { user, password, host, port, database } = getDbConnProperties();
+
     this.dataSource = new DataSource({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'password',
-      database: 'salesitemservice',
+      host: host,
+      port: port,
+      username: user,
+      password: password,
+      database: database,
       entities: [DbSalesItem, DbSalesItemImage],
       // Do not use 'true' in production environment,
       // but use migrations when needed
@@ -42,7 +45,6 @@ export default class TypeOrmSalesItemRepository implements SalesItemRepository {
       const dbSalesItems = await this.dataSource.manager.find(DbSalesItem);
       return dbSalesItems.map((item) => item.toDomainEntity());
     } catch (error) {
-      console.log(error);
       throw new DatabaseError(error);
     }
   }

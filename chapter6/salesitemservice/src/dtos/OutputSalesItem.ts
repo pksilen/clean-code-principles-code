@@ -34,7 +34,6 @@ export default class OutputSalesItem extends InputSalesItem {
       return outputSalesItemImage;
     });
 
-    console.log(outputSalesItem);
     await validateOrReject(outputSalesItem);
     return outputSalesItem;
   }
