@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import DbSalesItemImage from './DbSalesItemImage';
-import SalesItem from '../../../entities/SalesItem';
+import SalesItem from '../../../../entities/SalesItem';
 
 @Entity('salesitems')
 export default class DbSalesItem {
