@@ -1,0 +1,31 @@
+{
+  "name": "salesitemservice_graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@apollo/server": "^4.10.2",
+    "graphql": "^16.8.1",
+    "class-transformer": "^0.5.1",
+    "class-transformer-validator": "^0.9.1",
+    "class-validator": "^0.14.1",
+    "mongodb": "^5.9.2",
+    "mysql2": "^3.9.2",
+    "prisma": "^5.11.0",
+    "typeorm": "^0.3.20",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.3"
+  }
+}
