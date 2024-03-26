@@ -48,7 +48,8 @@ export REPOSITORY_TYPE=paramsql
 
 prisma generate --schema=./src/repositories/orm/prisma/schema.prisma
 prisma migrate dev --name init --schema=./src/repositories/orm/prisma/schema.prisma
-npm run start:dev
+npm run build
+npm start
 ```
 
 Sample HTTP requests are available in scratches/salesitemservice_rest.http and

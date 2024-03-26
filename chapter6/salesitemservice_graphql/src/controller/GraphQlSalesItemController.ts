@@ -1,6 +1,8 @@
+import SalesItemService from "../services/SalesItemService";
+import { transformAndValidate } from "class-transformer-validator";
+import InputSalesItem from "../dtos/InputSalesItem";
 
-export const typeDefs =
-`
+export const typeDefs = `
 type SalesItem {
   id: ID!
   createdAtTimestampInMs: String!
@@ -15,15 +17,15 @@ type Image {
   url: String!
 }
 
-input InputImage {
-  rank: Int!
-  url: String!
-}
-
 input InputSalesItem {
   name: String!
   priceInCents: Int!
   images: [InputImage!]!
+}
+
+input InputImage {
+  rank: Int!
+  url: String!
 }
 
 type IdResponse {
@@ -45,47 +47,49 @@ type Mutation {
 
   deleteSalesItem(id: ID!): IdResponse!
 }
-`
+`;
 
 export default class GraphQlSalesItemController {
-    constructor(salesItemService) {
-        this.salesItemService = salesItemService;
-    }
+  constructor(private readonly salesItemService: SalesItemService) {}
 
-    getResolvers() {
-        return {
-            Query: {
-                salesItems: this.getSalesItems,
-                salesItem: this.getSalesItem
-            },
-            Mutation: {
-                createSalesItem: this.createSalesItem,
-                updateSalesItem: this.updateSalesItem,
-                deleteSalesItem: this.deleteSalesItem
-            }
-        }
-    }
+  getResolvers() {
+    return {
+      Query: {
+        salesItems: this.getSalesItems,
+        salesItem: this.getSalesItem,
+      },
+      Mutation: {
+        createSalesItem: this.createSalesItem,
+        updateSalesItem: this.updateSalesItem,
+        deleteSalesItem: this.deleteSalesItem,
+      },
+    };
+  }
 
-    private getSalesItems(...) {
-        return this.salesItemService.getSalesItems(...);
-    }
+  private getSalesItems = () => this.salesItemService.getSalesItems();
+  private getSalesItem = (_, { id }) => this.salesItemService.getSalesItem(id);
 
-    private getSalesItem({ id }) {
-        return this.salesItemService.getSalesItem(id);
-    }
+  private createSalesItem = async (_, { inputSalesItem: input }) => {
+    const inputSalesItem = await transformAndValidate(
+      InputSalesItem,
+      input as object,
+    );
 
-    private createSalesItem({ inputSalesItem: input }) {
-        const inputSalesItem = await transformAndValidate(InputSalesItem, input);
-        return this.salesItemService.createSalesItem(inputSalesItem);
-    }
+    return this.salesItemService.createSalesItem(inputSalesItem);
+  };
 
-    private updateSalesItem({ id, inputSalesItem: input }) {
-        const inputSalesItem = await transformAndValidate(InputSalesItem, input);
-        return this.salesItemService.createSalesItem(newSalesItem);
-    }
+  private updateSalesItem = async (_, { id, inputSalesItem: input }) => {
+    const inputSalesItem = await transformAndValidate(
+      InputSalesItem,
+      input as object,
+    );
 
-    private deleteSalesItem({ id }) {
-        this.salesItemService.deleteSalesItem(id);
-        return { id };
-    }
+    this.salesItemService.updateSalesItem(id, inputSalesItem);
+    return { id };
+  };
+
+  private deleteSalesItem = (_, { id }) => {
+    this.salesItemService.deleteSalesItem(id);
+    return { id };
+  };
 }

@@ -3,8 +3,9 @@ import {
   IsInt,
   MaxLength,
   ValidateNested,
-} from 'class-validator';
-import InputSalesItemImage from './InputSalesItemImage';
+} from "class-validator";
+import InputSalesItemImage from "./InputSalesItemImage";
+import { Type } from "class-transformer";
 
 export default class InputSalesItem {
   @MaxLength(256)
@@ -15,6 +16,7 @@ export default class InputSalesItem {
   @IsInt()
   priceInCents: number;
 
+  @Type(() => InputSalesItemImage)
   @ValidateNested()
   @ArrayMaxSize(25)
   images: InputSalesItemImage[];

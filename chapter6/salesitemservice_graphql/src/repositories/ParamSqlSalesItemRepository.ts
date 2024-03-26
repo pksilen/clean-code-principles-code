@@ -1,9 +1,9 @@
-import * as mysql from 'mysql2/promise';
-import SalesItemRepository from './SalesItemRepository';
-import SalesItem from '../entities/SalesItem';
-import DatabaseError from 'src/errors/DatabaseError';
-import SalesItemImage from '../entities/SalesItemImage';
-import { getDbConnProperties } from '../utils/utils';
+import * as mysql from "mysql2/promise";
+import SalesItemRepository from "./SalesItemRepository";
+import SalesItem from "../entities/SalesItem";
+import DatabaseError from "../errors/DatabaseError";
+import SalesItemImage from "../entities/SalesItemImage";
+import { getDbConnProperties } from "../utils/utils";
 
 interface DatabaseConfig {
   user: string;
@@ -33,7 +33,7 @@ export default class ParamSqlSalesItemRepository
       connection = await this.connectionPool.getConnection();
 
       await connection.execute(
-        'INSERT INTO salesitems (id, createdAtTimestampInMs, name, priceInCents) VALUES (?, ?, ?, ?)',
+        "INSERT INTO salesitems (id, createdAtTimestampInMs, name, priceInCents) VALUES (?, ?, ?, ?)",
         [
           salesItem.id,
           salesItem.createdAtTimestampInMs,
@@ -62,9 +62,9 @@ export default class ParamSqlSalesItemRepository
     try {
       connection = await this.connectionPool.getConnection();
       const [rows] = await connection.execute(
-        'SELECT s.id, s.createdAtTimestampInMs, s.name, s.priceInCents, ' +
-          'si.id as imageId, si.rank as imageRank, si.url as imageUrl ' +
-          'FROM salesitems s LEFT JOIN salesitemimages si ON si.salesItemId = s.id',
+        "SELECT s.id, s.createdAtTimestampInMs, s.name, s.priceInCents, " +
+          "si.id as imageId, si.rank as imageRank, si.url as imageUrl " +
+          "FROM salesitems s LEFT JOIN salesitemimages si ON si.salesItemId = s.id",
       );
 
       return this.getSalesItems(rows as any[]);
@@ -82,9 +82,9 @@ export default class ParamSqlSalesItemRepository
       connection = await this.connectionPool.getConnection();
 
       const [rows] = await connection.execute(
-        'SELECT s.id, s.createdAtTimestampInMs, s.name, s.priceInCents, ' +
-          'si.id as imageId, si.rank as imageRank, si.url as imageUrl ' +
-          'FROM salesitems s LEFT JOIN salesitemimages si ON si.salesItemId = s.id WHERE s.id = ?',
+        "SELECT s.id, s.createdAtTimestampInMs, s.name, s.priceInCents, " +
+          "si.id as imageId, si.rank as imageRank, si.url as imageUrl " +
+          "FROM salesitems s LEFT JOIN salesitemimages si ON si.salesItemId = s.id WHERE s.id = ?",
         [id],
       );
 
@@ -103,12 +103,12 @@ export default class ParamSqlSalesItemRepository
       connection = await this.connectionPool.getConnection();
 
       await connection.execute(
-        'UPDATE salesitems SET name = ?, priceInCents = ? WHERE id = ?',
+        "UPDATE salesitems SET name = ?, priceInCents = ? WHERE id = ?",
         [salesItem.name, salesItem.priceInCents, salesItem.id],
       );
 
       await connection.execute(
-        'DELETE FROM salesitemimages WHERE salesItemId = ?',
+        "DELETE FROM salesitemimages WHERE salesItemId = ?",
         [salesItem.id],
       );
 
@@ -133,11 +133,11 @@ export default class ParamSqlSalesItemRepository
       connection = await this.connectionPool.getConnection();
 
       await connection.execute(
-        'DELETE FROM salesitemimages WHERE salesItemId = ?',
+        "DELETE FROM salesitemimages WHERE salesItemId = ?",
         [id],
       );
 
-      await connection.execute('DELETE FROM salesitems WHERE id = ?', [id]);
+      await connection.execute("DELETE FROM salesitems WHERE id = ?", [id]);
       await connection.commit();
     } catch (error) {
       throw new DatabaseError(error);
@@ -201,7 +201,7 @@ export default class ParamSqlSalesItemRepository
     images: SalesItemImage[],
   ) {
     const statement =
-      'INSERT INTO salesitemimages (id, `rank`, url, salesItemId) VALUES (?, ?, ?, ?)';
+      "INSERT INTO salesitemimages (id, `rank`, url, salesItemId) VALUES (?, ?, ?, ?)";
 
     for (const image of images) {
       await connection.execute(statement, [

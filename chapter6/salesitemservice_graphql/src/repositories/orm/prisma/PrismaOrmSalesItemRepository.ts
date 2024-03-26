@@ -1,10 +1,8 @@
-import SalesItemRepository from '../../SalesItemRepository';
-import SalesItem from '../../../entities/SalesItem';
-import DatabaseError from '../../../errors/DatabaseError';
-import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import SalesItemRepository from "../../SalesItemRepository";
+import SalesItem from "../../../entities/SalesItem";
+import DatabaseError from "../../../errors/DatabaseError";
+import { PrismaClient } from "@prisma/client";
 
-@Injectable()
 export default class PrismaOrmSalesItemRepository
   implements SalesItemRepository
 {
