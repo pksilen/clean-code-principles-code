@@ -53,4 +53,4 @@ npm run start:dev
 
 Sample HTTP requests are available in scratches/salesitemservice_rest.http and
 scratches/salesitemservice_graphql.http files.
-You can use these requests with the PyCharm Professional's HTTP client.
+You can use these requests with the WebStorm's HTTP client.
