@@ -29,7 +29,7 @@ mysql> exit
 exit
 ```
 
-## Start Nest.js Server
+## Start Apollo GraphQL Server
 
 ```bash
 # Choose one of the below commands depending whether you want to use REST or GraphQL
@@ -48,9 +48,9 @@ export REPOSITORY_TYPE=paramsql
 
 prisma generate --schema=./src/repositories/orm/prisma/schema.prisma
 prisma migrate dev --name init --schema=./src/repositories/orm/prisma/schema.prisma
-npm run start:dev
+npm run build
+npm start
 ```
 
-Sample HTTP requests are available in scratches/salesitemservice_rest.http and
-scratches/salesitemservice_graphql.http files.
-You can use these requests with the PyCharm Professional's HTTP client.
+Sample HTTP requests are available in scratches/salesitemservice_graphql.http file.
+You can use these requests with the WebStorm's HTTP client.
