@@ -5,6 +5,7 @@ import {
   ExceptionFilter,
 } from '@nestjs/common';
 import { createErrorResponse } from '../utils/utils';
+import { ApolloError } from 'apollo-server-express';
 
 @Catch(BadRequestException)
 export class ValidationErrorFilter implements ExceptionFilter {
@@ -20,6 +21,14 @@ export class ValidationErrorFilter implements ExceptionFilter {
     // api_endpoint=`${request.method} ${request.url}`
     // status_code=400
     // errorCode="RequestValidationError"
+
+    if (process.env.CONTROLLER_TYPE === 'graphql') {
+      return new ApolloError(
+        error.message,
+        undefined,
+        createErrorResponse(error, 400, 'RequestValidationError', undefined),
+      );
+    }
 
     response
       .status(400)
