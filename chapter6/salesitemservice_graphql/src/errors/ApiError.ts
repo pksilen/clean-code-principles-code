@@ -14,7 +14,7 @@ export default class ApiError extends Error {
 
   toResponse(requestOrEndpoint: any) {
     const endpoint =
-      requestOrEndpoint.method && requestOrEndpoint.url
+      requestOrEndpoint?.method && requestOrEndpoint?.url
         ? `${requestOrEndpoint.method} ${requestOrEndpoint.url}`
         : requestOrEndpoint;
 

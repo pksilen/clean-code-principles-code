@@ -19,20 +19,17 @@ export function createErrorResponse(
   error: Error,
   statusCode: number,
   errorCode: string,
-  requestOrEndpointString: any,
+  requestOrEndpoint: any,
 ): ErrorResponse {
   const errorMessage = errorCode
     .split(/(?=[A-Z])/)
     .join(' ')
     .toLowerCase();
 
-  let endpoint: string;
-
-  if (typeof requestOrEndpointString === 'string') {
-    endpoint = requestOrEndpointString;
-  } else {
-    endpoint = `${requestOrEndpointString.method} ${requestOrEndpointString.url}`;
-  }
+  const endpoint =
+    requestOrEndpoint?.method && requestOrEndpoint?.url
+      ? `${requestOrEndpoint.method} ${requestOrEndpoint.url}`
+      : requestOrEndpoint;
 
   return {
     statusCode: statusCode,

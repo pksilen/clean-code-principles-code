@@ -1,5 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { createErrorResponse } from '../utils/utils';
+import { ApolloError } from 'apollo-server-express';
 
 @Catch()
 export class ErrorFilter implements ExceptionFilter {
@@ -15,6 +16,14 @@ export class ErrorFilter implements ExceptionFilter {
     // api_endpoint=f'{request.method} {request.url}'
     // status_code=500
     // error_code='UnspecifiedError'
+
+    if (process.env.CONTROLLER_TYPE === 'graphql') {
+      return new ApolloError(
+        error.message,
+        undefined,
+        createErrorResponse(error, 500, 'UnspecifiedInternalError', undefined),
+      );
+    }
 
     response
       .status(500)

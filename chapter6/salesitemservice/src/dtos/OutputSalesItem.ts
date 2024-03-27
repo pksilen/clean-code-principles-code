@@ -1,20 +1,35 @@
-import InputSalesItem from './InputSalesItem';
 import {
   ArrayMaxSize,
+  IsInt,
   MaxLength,
   ValidateNested,
   validateOrReject,
 } from 'class-validator';
 import SalesItem from '../entities/SalesItem';
 import OutputSalesItemImage from './OutputSalesItemImage';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
-export default class OutputSalesItem extends InputSalesItem {
+@ObjectType()
+export default class OutputSalesItem {
+  @Field()
   @MaxLength(36)
   id: string;
 
+  @Field()
   @MaxLength(20)
   createdAtTimestampInMs: string;
 
+  @Field()
+  @MaxLength(256)
+  name: string;
+
+  // We accept negative prices for sales items that act
+  // as discount items
+  @Field(() => Int)
+  @IsInt()
+  priceInCents: number;
+
+  @Field(() => [OutputSalesItemImage])
   @ValidateNested()
   @ArrayMaxSize(25)
   images: OutputSalesItemImage[];

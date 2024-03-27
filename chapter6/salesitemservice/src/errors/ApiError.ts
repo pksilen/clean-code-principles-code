@@ -9,15 +9,20 @@ export default class ApiError extends Error {
     private readonly errorDescription?: string,
     private readonly cause?: Error,
   ) {
-    super();
+    super(errorMessage);
   }
 
-  toResponseObject(request: Request) {
+  toResponse(requestOrEndpoint: any) {
+    const endpoint =
+      requestOrEndpoint?.method && requestOrEndpoint?.url
+        ? `${requestOrEndpoint.method} ${requestOrEndpoint.url}`
+        : requestOrEndpoint;
+
     return {
       statusCode: this._statusCode,
       statusText: this.statusText,
       timestamp: new Date().toISOString(),
-      endpoint: `${request.method} ${request.url}`,
+      endpoint,
       errorCode: this.errorCode,
       errorMessage: this.errorMessage,
       errorDescription: this.errorDescription,

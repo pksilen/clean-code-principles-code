@@ -1,5 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import SalesItemServiceError from '../errors/SalesItemServiceError';
+import { ApolloError } from 'apollo-server-express';
 
 @Catch(SalesItemServiceError)
 export default class SalesItemServiceErrorFilter implements ExceptionFilter {
@@ -16,7 +17,14 @@ export default class SalesItemServiceErrorFilter implements ExceptionFilter {
     // api_endpoint=`${request.method} ${request.url}`
     // status_code=error.statusCode
     // error_code=error.code
+    if (process.env.CONTROLLER_TYPE === 'graphql') {
+      return new ApolloError(
+        error.message,
+        undefined,
+        error.toResponse(undefined),
+      );
+    }
 
-    response.status(error.statusCode).json(error.toResponseObject(request));
+    response.status(error.statusCode).json(error.toResponse(request));
   }
 }

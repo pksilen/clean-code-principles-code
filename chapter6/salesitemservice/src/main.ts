@@ -7,7 +7,11 @@ import { ErrorFilter } from './errorfilters/ErrorFilter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
 
   // Highest priority global filter is the last one
   app.useGlobalFilters(

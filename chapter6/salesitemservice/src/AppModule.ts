@@ -6,6 +6,10 @@ import * as process from 'process';
 import ParamSqlSalesItemRepository from './repositories/ParamSqlSalesItemRepository';
 import MongoDbSalesItemRepository from './repositories/MongoDbSalesItemRepository';
 import PrismaOrmSalesItemRepository from './repositories/orm/prisma/PrismaOrmSalesItemRepository';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import GraphQlSalesItemController from './controllers/graphql/GraphQlSalesItemController';
 
 function getSalesItemRepositoryClass() {
   if (process.env.DATABASE_URL?.startsWith('mongodb')) {
@@ -22,9 +26,17 @@ function getSalesItemRepositoryClass() {
 }
 
 @Module({
-  imports: [],
+  imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+    }),
+  ],
   controllers: [RestSalesItemController],
   providers: [
+    GraphQlSalesItemController,
     {
       provide: 'salesItemService',
       useClass: SalesItemServiceImpl,
