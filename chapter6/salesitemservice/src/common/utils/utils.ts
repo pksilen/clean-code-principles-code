@@ -1,4 +1,6 @@
 // Define an interface for the error dictionary structure
+import { HttpException } from '@nestjs/common';
+
 interface ErrorResponse {
   statusCode: number;
   statusText: string;
@@ -21,10 +23,12 @@ export function createErrorResponse(
   errorCode: string,
   requestOrEndpoint: any,
 ): ErrorResponse {
-  const errorMessage = errorCode
+  let errorMessage = errorCode
     .split(/(?=[A-Z])/)
     .join(' ')
     .toLowerCase();
+
+  errorMessage = errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1);
 
   const endpoint =
     requestOrEndpoint?.method && requestOrEndpoint?.url
@@ -38,7 +42,10 @@ export function createErrorResponse(
     timestamp: new Date().toISOString(),
     errorCode: errorCode,
     errorMessage: errorMessage,
-    errorDescription: error.toString(),
+    errorDescription:
+      error instanceof HttpException
+        ? (error.getResponse() as any)?.message
+        : error.toString(),
     stackTrace: getStackTrace(error),
   };
 }
