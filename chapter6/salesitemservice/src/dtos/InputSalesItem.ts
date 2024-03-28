@@ -6,6 +6,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import InputSalesItemImage from './InputSalesItemImage';
+import { Type } from 'class-transformer';
 
 @InputType()
 export default class InputSalesItem {
@@ -20,6 +21,7 @@ export default class InputSalesItem {
   priceInCents: number;
 
   @Field(() => [InputSalesItemImage])
+  @Type(() => InputSalesItemImage)
   @ValidateNested()
   @ArrayMaxSize(25)
   images: InputSalesItemImage[];

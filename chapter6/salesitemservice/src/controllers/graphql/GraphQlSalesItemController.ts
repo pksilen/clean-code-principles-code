@@ -24,7 +24,8 @@ export default class GraphQlSalesItemController {
 
   @Mutation(() => OutputSalesItem)
   async createSalesItem(
-    @Args('inputSalesItem') inputSalesItem: InputSalesItem,
+    @Args('inputSalesItem')
+    inputSalesItem: InputSalesItem,
   ) {
     return this.salesItemService.createSalesItem(inputSalesItem);
   }

@@ -8,6 +8,7 @@ import {
 import SalesItem from '../entities/SalesItem';
 import OutputSalesItemImage from './OutputSalesItemImage';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 
 @ObjectType()
 export default class OutputSalesItem {
@@ -30,6 +31,7 @@ export default class OutputSalesItem {
   priceInCents: number;
 
   @Field(() => [OutputSalesItemImage])
+  @Type(() => OutputSalesItemImage)
   @ValidateNested()
   @ArrayMaxSize(25)
   images: OutputSalesItemImage[];
