@@ -4,7 +4,7 @@ import {
   Catch,
   ExceptionFilter,
 } from '@nestjs/common';
-import { createErrorResponse } from '../utils/utils';
+import { createErrorResponse } from '../common/utils/utils';
 import { ApolloError } from 'apollo-server-express';
 
 @Catch(BadRequestException)

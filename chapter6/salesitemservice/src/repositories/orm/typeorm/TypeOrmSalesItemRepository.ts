@@ -5,7 +5,7 @@ import DatabaseError from '../../../errors/DatabaseError';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import DbSalesItemImage from './entities/DbSalesItemImage';
-import { getDbConnProperties } from '../../../utils/utils';
+import { getDbConnProperties } from '../../../common/utils/utils';
 
 @Injectable()
 export default class TypeOrmSalesItemRepository implements SalesItemRepository {

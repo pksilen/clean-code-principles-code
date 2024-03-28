@@ -1,4 +1,4 @@
-import { getStackTrace } from '../utils/utils';
+import { getStackTrace } from '../common/utils/utils';
 
 export default class ApiError extends Error {
   constructor(

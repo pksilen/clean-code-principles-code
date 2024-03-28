@@ -10,6 +10,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import GraphQlSalesItemController from './controllers/graphql/GraphQlSalesItemController';
+import MetricsImpl from './common/metrics/MetricsImpl';
+import StdOutLogger from './common/logger/StdOutLogger';
 
 function getSalesItemRepositoryClass() {
   if (process.env.DATABASE_URL?.startsWith('mongodb')) {
@@ -37,6 +39,14 @@ function getSalesItemRepositoryClass() {
   controllers: [RestSalesItemController],
   providers: [
     GraphQlSalesItemController,
+    {
+      provide: 'logger',
+      useClass: StdOutLogger,
+    },
+    {
+      provide: 'metrics',
+      useClass: MetricsImpl,
+    },
     {
       provide: 'salesItemService',
       useClass: SalesItemServiceImpl,

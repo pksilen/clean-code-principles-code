@@ -3,7 +3,7 @@ import SalesItemRepository from './SalesItemRepository';
 import SalesItem from '../entities/SalesItem';
 import DatabaseError from 'src/errors/DatabaseError';
 import SalesItemImage from '../entities/SalesItemImage';
-import { getDbConnProperties } from '../utils/utils';
+import { getDbConnProperties } from '../common/utils/utils';
 
 interface DatabaseConfig {
   user: string;

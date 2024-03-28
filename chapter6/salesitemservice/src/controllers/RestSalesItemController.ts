@@ -8,11 +8,19 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import SalesItemService from '../services/SalesItemService';
 import InputSalesItem from '../dtos/InputSalesItem';
 import OutputSalesItem from '../dtos/OutputSalesItem';
+import { AuditLogger } from '../interceptors/AuditLogger';
+import { RequestCountIncrementor } from '../interceptors/RequestCountIncrementor';
+import { RequestTracer } from '../interceptors/RequestTracer';
+import { AllowForUserThatHasOneOfRoles } from '../guards/AllowForUserThatHasOneOfRoles';
+import { authorizer } from '../common/authorizer/FakeAuthorizer';
 
+@UseInterceptors(RequestCountIncrementor, RequestTracer)
 @Controller('sales-items')
 export default class RestSalesItemController {
   constructor(
@@ -47,6 +55,8 @@ export default class RestSalesItemController {
     return this.salesItemService.updateSalesItem(id, inputSalesItem);
   }
 
+  @UseGuards(new AllowForUserThatHasOneOfRoles(['admin'], authorizer))
+  @UseInterceptors(AuditLogger)
   @Delete('/:id')
   @HttpCode(204)
   deleteSalesItem(@Param('id') id: string): Promise<void> {
