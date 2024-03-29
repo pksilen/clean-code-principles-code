@@ -1,0 +1,73 @@
+WEBSOCKET ws://localhost:8001
+Content-Type: application/json // used only for IDE highlighting.
+// Highlighting is applied for each message independently.
+
+{
+    "event": "createSalesItem",
+    "data": {
+      "name": "Sales item 1",
+      "priceInCents": 2,
+      "images": [
+        {
+          "rank": 1,
+          "url": "http://www.something.com/url1"
+        },
+        {
+          "rank": 2,
+          "url": "http://www.something.com/url2"
+        }
+      ]
+    }
+}
+
+###
+
+###
+WEBSOCKET ws://localhost:8001
+Content-Type: application/json
+
+{
+    "event": "getSalesItems"
+}
+
+###
+WEBSOCKET ws://localhost:8001
+Content-Type: application/json
+
+{
+  "event": "getSalesItem",
+  "data": "48fc99f1-fef6-43d2-afdc-57331a2aad02"
+
+}
+
+###
+WEBSOCKET ws://localhost:8001
+Content-Type: application/json
+
+{
+    "event": "updateSalesItem",
+    "data": {
+      "id": "48fc99f1-fef6-43d2-afdc-57331a2aad02",
+      "name": "Sales item 22",
+      "priceInCents": 1000,
+      "images": [
+        {
+          "rank": 1000,
+          "url": "http://www.something.com/url1"
+        },
+        {
+          "rank": 2000,
+          "url": "http://www.something.com/url2"
+        }
+      ]
+    }
+}
+
+###
+WEBSOCKET ws://localhost:8001
+Content-Type: application/json
+
+{
+    "event": "deleteSalesItem",
+    "data": "48fc99f1-fef6-43d2-afdc-57331a2aad02"
+}

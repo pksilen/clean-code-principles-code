@@ -5,10 +5,12 @@ import {
 } from '@nestjs/websockets';
 import InputSalesItem from '../../dtos/InputSalesItem';
 import SalesItemService from '../../services/SalesItemService';
-import { Inject, UseFilters } from '@nestjs/common';
+import { Inject, UseFilters, UseInterceptors } from '@nestjs/common';
 import { transformAndValidate } from 'class-transformer-validator';
 import { WebSocketErrorFilter } from './WebSocketErrorFilter';
+import { WebSocketRequestTracer } from './WebSocketRequestTracer';
 
+@UseInterceptors(WebSocketRequestTracer)
 @UseFilters(new WebSocketErrorFilter())
 @WebSocketGateway(8001, { cors: true })
 export default class WebSocketSalesItemController {

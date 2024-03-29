@@ -1,10 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Inject } from '@nestjs/common';
+import { Inject, UseInterceptors } from '@nestjs/common';
 import OutputSalesItem from '../../dtos/OutputSalesItem';
 import SalesItemService from '../../services/SalesItemService';
 import InputSalesItem from '../../dtos/InputSalesItem';
 import IdResponse from './IdResponse';
+import { GraphQlRequestTracer } from './GraphQlRequestTracer';
 
+@UseInterceptors(GraphQlRequestTracer)
 @Resolver()
 export default class GraphQlSalesItemController {
   constructor(
