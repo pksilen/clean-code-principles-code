@@ -12,6 +12,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import GraphQlSalesItemController from './controllers/graphql/GraphQlSalesItemController';
 import MetricsImpl from './common/metrics/MetricsImpl';
 import StdOutLogger from './common/logger/StdOutLogger';
+import WebSocketSalesItemController from './controllers/websocket/WebSocketSalesItemController';
 
 function getSalesItemRepositoryClass() {
   if (process.env.DATABASE_URL?.startsWith('mongodb')) {
@@ -38,6 +39,7 @@ function getSalesItemRepositoryClass() {
   ],
   controllers: [RestSalesItemController],
   providers: [
+    WebSocketSalesItemController,
     GraphQlSalesItemController,
     {
       provide: 'logger',

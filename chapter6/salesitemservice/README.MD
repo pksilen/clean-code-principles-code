@@ -32,9 +32,10 @@ exit
 ## Start Nest.js Server
 
 ```bash
-# Choose one of the below commands depending whether you want to use REST or GraphQL
+# Choose one of the below commands depending whether you want to use REST, GraphQL or WebSocket
 export CONTROLLER_TYPE=rest
 export CONTROLLER_TYPE=graphql
+export CONTROLLER_TYPE=websocket
 
 # Choose one of the below commands depending whether you want to use MySQL or MongoDB
 export DATABASE_URL=mongodb://localhost:27017/salesitemservice

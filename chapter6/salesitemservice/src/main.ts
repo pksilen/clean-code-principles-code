@@ -4,9 +4,12 @@ import { ValidationPipe } from '@nestjs/common';
 import SalesItemServiceErrorFilter from './errorfilters/SalesItemServiceErrorFilter';
 import { ValidationErrorFilter } from './errorfilters/ValidationErrorFilter';
 import { ErrorFilter } from './errorfilters/ErrorFilter';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useWebSocketAdapter(new WsAdapter(app));
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
