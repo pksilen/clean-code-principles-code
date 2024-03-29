@@ -13,6 +13,7 @@ import GraphQlSalesItemController from './controllers/graphql/GraphQlSalesItemCo
 import MetricsImpl from './common/metrics/MetricsImpl';
 import StdOutLogger from './common/logger/StdOutLogger';
 import WebSocketSalesItemController from './controllers/websocket/WebSocketSalesItemController';
+import RemoteAuditLoggingService from './common/logger/audit/RemoteAuditLoggingService';
 
 function getSalesItemRepositoryClass() {
   if (process.env.DATABASE_URL?.startsWith('mongodb')) {
@@ -48,6 +49,10 @@ function getSalesItemRepositoryClass() {
     {
       provide: 'metrics',
       useClass: MetricsImpl,
+    },
+    {
+      provide: 'auditLoggingService',
+      useClass: RemoteAuditLoggingService,
     },
     {
       provide: 'salesItemService',
