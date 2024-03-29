@@ -52,7 +52,11 @@ export default class SalesItemServiceImpl implements SalesItemService {
     return this.salesItemRepository.update(salesItem);
   }
 
-  deleteSalesItem(id: string): Promise<void> {
-    return this.salesItemRepository.delete(id);
+  async deleteSalesItem(id: string): Promise<void> {
+    if (await this.salesItemRepository.find(id)) {
+      await this.salesItemRepository.delete(id);
+    }
+
+    return Promise.resolve();
   }
 }
