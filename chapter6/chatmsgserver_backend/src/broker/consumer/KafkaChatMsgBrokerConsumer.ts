@@ -1,13 +1,16 @@
-import phoneNbrToWsConnectionMap from '../../connection/phoneNbrToConnMap';
 import ChatMsgBrokerConsumer from './ChatMsgBrokerConsumer';
 import { Consumer, Kafka } from 'kafkajs';
+import { ChatMsgService } from '../../service/ChatMsgService';
 
 export default class KafkaChatMsgBrokerConsumer
   implements ChatMsgBrokerConsumer
 {
   private readonly kafkaConsumer: Consumer;
 
-  constructor(kafkaClient: Kafka) {
+  constructor(
+    kafkaClient: Kafka,
+    private readonly chatMsgService: ChatMsgService,
+  ) {
     this.kafkaConsumer = kafkaClient.consumer({ groupId: 'chat-msg-server' });
   }
 
@@ -22,15 +25,10 @@ export default class KafkaChatMsgBrokerConsumer
     this.kafkaConsumer.run({
       eachMessage: async ({ message }) => {
         try {
-          this.chatMsgService.send(chatMessage);
-
-          const chatMessage = JSON.parse(message.value.toString());
-
-          const recipientWsConnection = phoneNbrToWsConnectionMap.get(
-            chatMessage.recipientPhoneNbr,
-          );
-
-          recipientWsConnection?.send(JSON.stringify(chatMessage));
+          if (message.value) {
+            const chatMessage = JSON.parse(message.value.toString());
+            this.chatMsgService.trySend(chatMessage);
+          }
         } catch {
           // Handle error
         }

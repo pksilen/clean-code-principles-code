@@ -1,86 +1,76 @@
-import { WebSocketServer } from 'ws';
-import kafkaClient from './kafkaClient.js';
-import redisClient from './redisClient.js';
-
-import phoneNbrToWsConnectionMap
-  from './phoneNbrToWsConnectionMap.js';
-
-import KafkaMessageBrokerProducer
-  from './KafkaMessageBrokerProducer.js';
-
+import WebSocket, { WebSocketServer } from 'ws';
+import phoneNbrToConnMap from '../connection/phoneNbrToConnMap';
+import { ChatMessage } from '../service/ChatMessage';
+import WebSocketConnection from '../connection/WebSocketConnection';
+import PhoneNbrToInstanceUuidCache from '../cache/PhoneNbrToInstanceUuidCache';
+import RedisPhoneNbrToInstanceUuidCache from '../cache/RedisPhoneNbrToInstanceUuidCache';
+import redisClient from '../cache/redisClient';
 
 export default class WebSocketChatMsgServer {
-  wsServer;
-  messageBrokerProducer;
-  wsConnectionToPhoneNbrMap = new Map();
+  private readonly webSocketServer: WebSocketServer;
 
-  constructor(private readonly instanceUuid) {
-    this.chatMsgBrokerProducer = new KafkaChatMsgBrokerProducer(kafkaClient);
+  private readonly cache: PhoneNbrToInstanceUuidCache =
+    new RedisPhoneNbrToInstanceUuidCache(redisClient);
+
+  private readonly wsToPhoneNbrMap = new Map<WebSocket, string>();
+
+  constructor(private readonly instanceUuid: string) {
     this.webSocketServer = new WebSocketServer({ port: 8080 });
 
-    this.wsServer.on('connection', wsConnection => {
-      phone_nbr_to_conn_map[phone_number] = connection
-      self.__conn_to_phone_nbr_map[connection] = phone_number
-      cache.tryStore(phoneNumber, self.__instance_uuid)
+    this.webSocketServer.on('connection', (webSocket: WebSocket) => {
+      webSocket.on('message', async (chatMessageJson) => {
+        let chatMessage: ChatMessage;
 
-      wsConnection.on('message', async (chatMessageJson) => {
         try {
-          const chatMessage = this.parse(chatMessageJson);
+          // Validate chat message JSON ...
+          chatMessage = JSON.parse(chatMessageJson.toString());
         } catch {
-          // ...
+          // Handle error
+          return;
         }
 
-        // Validate chatMessage ...
-        // Store chat message permanently using another API ...
+        const senderPhoneNumber = chatMessage.senderPhoneNbr;
+        const webSocketConnection = new WebSocketConnection(webSocket);
+        phoneNbrToConnMap.set(senderPhoneNumber, webSocketConnection);
+        this.wsToPhoneNbrMap.set(webSocket, senderPhoneNumber);
 
-        const recipientServerUuid =
-          await this.getServerUuid(chatMessage.recipientPhoneNbr);
+        try {
+          this.cache.tryStore(senderPhoneNumber, this.instanceUuid);
+        } catch (error) {
+          // Handle error
+        }
 
-        this.send(chatMessage, recipientInstanceUuid);
+        this.chatMsgService.send(chatMessage);
       });
 
-      wsConnection.on('close', () => {
-        this.close(wsConnection);
+      webSocket.on('error', () => {
+        // Handle error ...
+      });
+
+      webSocket.on('close', () => {
+        this.close(webSocket);
       });
     });
   }
 
   closeServer() {
-    this.wsServer.close();
-    this.wsServer.clients.forEach(client => client.close());
-    this.messageBrokerProducer.close();
+    this.webSocketServer.close();
+    this.webSocketServer.clients.forEach((client) => client.close());
   }
 
-  send(chatMessage, serverUuid) {
-    // Extract this method to: ChatMsgService.send(chatMessage)
+  async close(webSocket: WebSocket) {
+    const phoneNumber = this.wsToPhoneNbrMap.get(webSocket);
 
-    if (serverUuid === this.serverUuid) {
-      // Recipient has active connection on
-      // the same server instance as sender
-      const recipientWsConnection =
-        phoneNbrToWsConnectionMap
-          .get(chatMessage.recipientPhoneNbr);
+    if (phoneNumber) {
+      phoneNbrToConnMap.delete(phoneNumber);
 
-      recipientWsConnection?
-    .send(JSON.stringify(chatMessage));
-
-    } else if (serverUuid) {
-      // Recipient has active connection on different
-      // server instance compared to sender
-      const serverTopic = serverUuid;
-
-      this.messageBrokerProducer
-        .produce(chatMessage, serverTopic);
+      try {
+        await this.cache.tryRemove(phoneNumber);
+      } catch (error) {
+        // Handle error
+      }
     }
-  }
 
-  async close(wsConnection) {
-    const phoneNbr =
-      this.wsConnectionToPhoneNbrMap
-        .get(wsConnection);
-
-    phoneNbrToWsConnectionMap.delete(phoneNbr);
-    this.wsConnectionToPhoneNbrMap.delete(wsConnection);
-    cache.tryRemove()
+    this.wsToPhoneNbrMap.delete(webSocket);
   }
 }
