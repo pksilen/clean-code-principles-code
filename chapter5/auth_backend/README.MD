@@ -4,6 +4,12 @@
 
 - Node.js v18 or later
 
+## Install Dependencies
+
+```bash
+npm install
+```
+
 ## Start Keycloak
 
 ```bash

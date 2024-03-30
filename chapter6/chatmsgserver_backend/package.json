@@ -1,0 +1,21 @@
+{
+  "name": "chatmsgserver_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "ioredis": "^5.3.2",
+    "kafkajs": "^2.2.4",
+    "ws": "^8.16.0"
+  }
+}
