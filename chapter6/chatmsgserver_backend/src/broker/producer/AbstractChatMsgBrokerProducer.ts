@@ -1,5 +1,6 @@
 import ChatMsgBrokerProducer from './ChatMsgBrokerProducer';
 import ChatMsgServerError from '../../errors/ChatMsgServerError';
+import { ChatMessage } from '../../service/ChatMessage';
 
 export default abstract class AbstractChatMsgBrokerProducer
   implements ChatMsgBrokerProducer

@@ -5,21 +5,25 @@ import WebSocketChatMsgServer from './src/server/WebSocketChatMsgServer';
 import KafkaChatMsgBrokerConsumer from './src/broker/consumer/KafkaChatMsgBrokerConsumer';
 import ChatMsgServiceImpl from './src/service/ChatMsgServiceImpl';
 
-const instanceUuid = uuidv4();
-const topic = instanceUuid;
+const serverUuid = uuidv4();
+const topic = serverUuid;
 
 new KafkaChatMsgBrokerAdminClient(kafkaClient)
   .tryCreateTopic(topic)
-  .then(() => {
-    const chatMsgService = new ChatMsgServiceImpl(instanceUuid);
-    const chatMsgServer = new WebSocketChatMsgServer(instanceUuid);
+  .then(async () => {
+    const chatMsgService = new ChatMsgServiceImpl(serverUuid);
+
+    const chatMsgServer = new WebSocketChatMsgServer(
+      serverUuid,
+      chatMsgService,
+    );
 
     const chatMsgBrokerConsumer = new KafkaChatMsgBrokerConsumer(
       kafkaClient,
       chatMsgService,
     );
 
-    chatMsgBrokerConsumer.consumeChatMessages(topic);
+    await chatMsgBrokerConsumer.consumeChatMessages(topic);
 
     function prepareExit() {
       chatMsgServer.closeServer();
@@ -30,6 +34,6 @@ new KafkaChatMsgBrokerAdminClient(kafkaClient)
     process.once('SIGQUIT', prepareExit);
     process.once('SIGTERM', prepareExit);
   })
-  .catch((error) => {
+  .catch(() => {
     // Handle error
   });

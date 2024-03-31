@@ -1,5 +1,6 @@
 import AbstractChatMsgBrokerProducer from './AbstractChatMsgBrokerProducer';
 import { Kafka, Producer } from 'kafkajs';
+import { ChatMessage } from '../../service/ChatMessage';
 
 export default class KafkaChatMsgBrokerProducer extends AbstractChatMsgBrokerProducer {
   private readonly kafkaProducer: Producer;
@@ -22,7 +23,7 @@ export default class KafkaChatMsgBrokerProducer extends AbstractChatMsgBrokerPro
     }
   }
 
-  async close(): Promise<void> {
+  async tryClose(): Promise<void> {
     try {
       await this.kafkaProducer.disconnect();
     } catch {

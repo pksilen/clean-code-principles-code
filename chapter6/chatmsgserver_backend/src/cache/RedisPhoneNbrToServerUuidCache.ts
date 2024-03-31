@@ -1,19 +1,19 @@
-import AbstractPhoneNbrToInstanceUuidCache from './AbstractPhoneNbrToInstanceUuidCache';
+import AbstractPhoneNbrToServerUuidCache from './AbstractPhoneNbrToServerUuidCache';
 import Redis from 'ioredis';
 
-export default class RedisPhoneNbrToInstanceUuidCache extends AbstractPhoneNbrToInstanceUuidCache {
+export default class RedisPhoneNbrToServerUuidCache extends AbstractPhoneNbrToServerUuidCache {
   constructor(private readonly redisClient: Redis) {
     super();
   }
 
-  async retrieveInstanceUuid(
+  async retrieveServerUuid(
     phoneNumber: string | undefined,
   ): Promise<string | null> {
-    let instanceUuid: string | null = null;
+    let serverUuid: string | null = null;
 
     if (phoneNumber) {
       try {
-        instanceUuid = await this.redisClient.hget(
+        serverUuid = await this.redisClient.hget(
           'phoneNbrToServerUuidMap',
           phoneNumber,
         );
@@ -22,15 +22,15 @@ export default class RedisPhoneNbrToInstanceUuidCache extends AbstractPhoneNbrTo
       }
     }
 
-    return instanceUuid;
+    return serverUuid;
   }
 
-  async tryStore(phoneNumber: string, instanceUuid: string): Promise<void> {
+  async tryStore(phoneNumber: string, serverUuid: string): Promise<void> {
     try {
       await this.redisClient.hset(
         'phoneNbrToServerUuidMap',
         phoneNumber,
-        instanceUuid,
+        serverUuid,
       );
     } catch {
       // Handle error

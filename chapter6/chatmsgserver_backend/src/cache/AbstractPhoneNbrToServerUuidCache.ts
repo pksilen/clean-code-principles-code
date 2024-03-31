@@ -1,12 +1,12 @@
-import PhoneNbrToInstanceUuidCache from './PhoneNbrToInstanceUuidCache';
+import PhoneNbrToServerUuidCache from './PhoneNbrToServerUuidCache';
 import ChatMsgServerError from '../errors/ChatMsgServerError';
 
-export default abstract class AbstractPhoneNbrToInstanceUuidCache
-  implements PhoneNbrToInstanceUuidCache
+export default abstract class AbstractPhoneNbrToServerUuidCache
+  implements PhoneNbrToServerUuidCache
 {
   static Error = class extends ChatMsgServerError {};
 
-  abstract retrieveInstanceUuid(
+  abstract retrieveServerUuid(
     phoneNumber: string | undefined,
   ): Promise<string | null>;
 

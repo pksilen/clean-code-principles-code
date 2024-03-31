@@ -2,20 +2,24 @@ import WebSocket, { WebSocketServer } from 'ws';
 import phoneNbrToConnMap from '../connection/phoneNbrToConnMap';
 import { ChatMessage } from '../service/ChatMessage';
 import WebSocketConnection from '../connection/WebSocketConnection';
-import PhoneNbrToInstanceUuidCache from '../cache/PhoneNbrToInstanceUuidCache';
-import RedisPhoneNbrToInstanceUuidCache from '../cache/RedisPhoneNbrToInstanceUuidCache';
+import PhoneNbrToServerUuidCache from '../cache/PhoneNbrToServerUuidCache';
+import RedisPhoneNbrToServerUuidCache from '../cache/RedisPhoneNbrToServerUuidCache';
 import redisClient from '../cache/redisClient';
+import { ChatMsgService } from '../service/ChatMsgService';
 
 export default class WebSocketChatMsgServer {
   private readonly webSocketServer: WebSocketServer;
 
-  private readonly cache: PhoneNbrToInstanceUuidCache =
-    new RedisPhoneNbrToInstanceUuidCache(redisClient);
+  private readonly cache: PhoneNbrToServerUuidCache =
+    new RedisPhoneNbrToServerUuidCache(redisClient);
 
   private readonly wsToPhoneNbrMap = new Map<WebSocket, string>();
 
-  constructor(private readonly instanceUuid: string) {
-    this.webSocketServer = new WebSocketServer({ port: 8080 });
+  constructor(
+    private readonly serverUuid: string,
+    private readonly chatMsgService: ChatMsgService,
+  ) {
+    this.webSocketServer = new WebSocketServer({ port: 8000 });
 
     this.webSocketServer.on('connection', (webSocket: WebSocket) => {
       webSocket.on('message', async (chatMessageJson) => {
@@ -29,26 +33,33 @@ export default class WebSocketChatMsgServer {
           return;
         }
 
-        const senderPhoneNumber = chatMessage.senderPhoneNbr;
-        const webSocketConnection = new WebSocketConnection(webSocket);
-        phoneNbrToConnMap.set(senderPhoneNumber, webSocketConnection);
-        this.wsToPhoneNbrMap.set(webSocket, senderPhoneNumber);
+        phoneNbrToConnMap.set(
+          chatMessage.senderPhoneNbr,
+          new WebSocketConnection(webSocket),
+        );
+
+        this.wsToPhoneNbrMap.set(webSocket, chatMessage.senderPhoneNbr);
 
         try {
-          this.cache.tryStore(senderPhoneNumber, this.instanceUuid);
+          await this.cache.tryStore(
+            chatMessage.senderPhoneNbr,
+            this.serverUuid,
+          );
         } catch (error) {
           // Handle error
         }
 
-        this.chatMsgService.send(chatMessage);
+        if (chatMessage.message) {
+          await this.chatMsgService.trySend(chatMessage);
+        }
       });
 
       webSocket.on('error', () => {
         // Handle error ...
       });
 
-      webSocket.on('close', () => {
-        this.close(webSocket);
+      webSocket.on('close', async () => {
+        await this.close(webSocket);
       });
     });
   }
