@@ -22,7 +22,7 @@ grpcClient.getSalesItem({ id: '' }, (error, response) => {
   console.log(error, JSON.stringify(response, undefined, 2));
 });
 
-/* grpcClient.getSalesItems({}, (error, response) => {
+grpcClient.getSalesItems({}, (error, response) => {
   console.log(error, JSON.stringify(response.salesItems, undefined, 2));
 });
 
@@ -54,4 +54,4 @@ grpcClient.deleteSalesItem(
   (error, response) => {
     console.log(error, response);
   },
-);*/
+);
