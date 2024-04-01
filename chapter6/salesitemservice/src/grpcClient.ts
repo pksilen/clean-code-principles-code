@@ -18,16 +18,13 @@ const grpcClient = new (salesitemservice as any).SalesItemService(
   credentials.createInsecure(),
 );
 
-grpcClient.getSalesItems({}, (error, response) => {
-  console.log(error, JSON.stringify(response.salesItems, undefined, 2));
+grpcClient.getSalesItem({ id: '' }, (error, response) => {
+  console.log(error, JSON.stringify(response, undefined, 2));
 });
 
-/* grpcClient.getSalesItem(
-  { id: '94d24e8d-2ae3-49b8-844a-29e3031e5d60' },
-  (error, response) => {
-    console.log(error, JSON.stringify(response, undefined, 2));
-  },
-); */
+/* grpcClient.getSalesItems({}, (error, response) => {
+  console.log(error, JSON.stringify(response.salesItems, undefined, 2));
+});
 
 grpcClient.createSalesItem(
   {
@@ -52,9 +49,9 @@ grpcClient.updateSalesItem(
   },
 );
 
-/* grpcClient.deleteSalesItem(
+grpcClient.deleteSalesItem(
   { id: '94d24e8d-2ae3-49b8-844a-29e3031e5d60' },
   (error, response) => {
     console.log(error, response);
   },
-); */
+);*/

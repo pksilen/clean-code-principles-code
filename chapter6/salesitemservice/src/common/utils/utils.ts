@@ -1,5 +1,8 @@
 // Define an interface for the error dictionary structure
 import { HttpException } from '@nestjs/common';
+import { status } from '@grpc/grpc-js';
+import ApiError from '../../errors/ApiError';
+import { ValidationError } from 'class-validator';
 
 interface ErrorResponse {
   statusCode: number;
@@ -50,6 +53,32 @@ export function createErrorResponse(
   };
 }
 
+export function createGrpcErrorResponse(endpoint: string, error: Error) {
+  let code;
+  let details;
+
+  if (error instanceof ApiError) {
+    code = mapHttpStatusCodeToGrpcStatusCode(error.statusCode);
+    details = error.toResponse(endpoint);
+  } else if (Array.isArray(error) && error?.[0] instanceof ValidationError) {
+    code = status.INVALID_ARGUMENT;
+    details = error[0].toString();
+  } else {
+    code = status.INTERNAL;
+    details = createErrorResponse(
+      error,
+      500,
+      'UnspecifiedInternalError',
+      endpoint,
+    );
+  }
+
+  return {
+    code,
+    details: typeof details === 'object' ? JSON.stringify(details) : details,
+  };
+}
+
 export function getStackTrace(error?: Error) {
   return process.env.ENV !== 'production' ? error?.stack : undefined;
 }
@@ -68,4 +97,13 @@ export function getDbConnProperties() {
   const port = parseInt(portString, 10);
   const database = path;
   return { user, password, host, port, database };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function mapHttpStatusCodeToGrpcStatusCode(httpStatusCode: number) {
+  // Map HTTP status code here to
+  // respective gRPC status code ...
+  // Mapping info is available here:
+  // https://cloud.google.com/apis/design/errors#error_model
+  return status.INTERNAL;
 }
