@@ -15,9 +15,11 @@ export class RequestCountIncrementor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const httpArgumentsHost = context.switchToHttp();
     const request = httpArgumentsHost.getRequest();
+
     this.metrics.incrementRequestCounter(
       `${request.method} ${request.url.split('/')[1]}`,
     );
+
     return next.handle();
   }
 }
