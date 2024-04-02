@@ -26,7 +26,6 @@ export default function LoanApplicationSummariesView() {
       }
     });
 
-
     eventSource.addEventListener('error', (errorEvent) => {
       // Handle error
     });
