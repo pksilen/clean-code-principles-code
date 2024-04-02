@@ -10,7 +10,7 @@ import java.util.List;
 public class Trip {
   private final List<Reservation> reservations;
 
-  public Trip(final List<Reservation> reservations, /* ... other fields */) {
+  public Trip(final List<Reservation> reservations, ...) {
     this.reservations = reservations;
   }
 
@@ -18,7 +18,7 @@ public class Trip {
     final List<Reservation> reservations = new ArrayList<>();
 
     for (final var flightReservation : inputTrip.getFlightReservations()) {
-      reservations.add(new FlightReservation(/* ... map inputTrip data */));
+      reservations.add(new FlightReservation(...));
     }
 
     // Similar loop as above for hotel reservations and
@@ -54,5 +54,23 @@ public class Trip {
         }
       }
     }
+  }
+
+  public void add(final Reservation reservation) {
+    reservation.make();
+    reservations.add(reservation);
+  }
+
+  public void remove(final Reservation reservation) {
+    while (true) {
+      try {
+        reservation.cancel();
+        break;
+      } catch (final Reservation.CancelError error) {
+        // Intentionally no operation
+      }
+    }
+
+    reservations.remove(reservation);
   }
 }

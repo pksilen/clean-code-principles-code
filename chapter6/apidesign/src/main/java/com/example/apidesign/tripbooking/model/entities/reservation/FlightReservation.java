@@ -8,7 +8,7 @@ public class FlightReservation extends AbstractReservation {
   private final FlightReservationService flightReservationService;
 
   public FlightReservation(
-      final FlightReservationService flightReservationService, /* ... */
+      final FlightReservationService flightReservationService, ...
   ) {
     super(Optional.empty());
   }
@@ -18,7 +18,7 @@ public class FlightReservation extends AbstractReservation {
     assertIsNotReserved();
 
     try {
-      this.setId(flightReservationService.reserveFlight(/* ... */));
+      this.setId(flightReservationService.reserveFlight(...));
     } catch (final FlightReservationService.ReserveFlightError error) {
       throw new MakeError(error);
     }

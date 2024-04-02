@@ -12,12 +12,12 @@ public abstract class AbstractReservation implements Reservation {
   }
 
   public void setId(final String id) {
-    this.id = Optional.of(id);
+    this.maybeId = Optional.of(id);
   }
 
   protected void assertIsNotReserved() {
     if (maybeId.isPresent()) {
-      throw new AlreadyReservedError("Reservation already exists");
+      throw new AlreadyReservedError(...);
     }
   }
 

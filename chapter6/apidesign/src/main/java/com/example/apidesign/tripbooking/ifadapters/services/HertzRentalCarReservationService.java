@@ -3,11 +3,11 @@ package com.example.apidesign.tripbooking.ifadapters.services;
 import com.example.apidesign.tripbooking.model.services.RentalCarReservationService;
 
 public class HertzRentalCarReservationService implements RentalCarReservationService {
-  String reserveCar(...) {
+  public String reserveCar(...) {
     // ...
   }
 
-  void cancelReservation(final String id) {
+  public void cancelReservation(final String id) {
     // ...
   }
 }

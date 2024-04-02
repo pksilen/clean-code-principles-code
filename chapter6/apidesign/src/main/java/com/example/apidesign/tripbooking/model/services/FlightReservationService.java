@@ -3,7 +3,10 @@ package com.example.apidesign.tripbooking.model.services;
 import com.example.apidesign.tripbooking.model.errors.TripBookingServiceError;
 
 public interface FlightReservationService extends ReservationService {
-  public static class ReserveFlightError extends TripBookingServiceError {
+  class ReserveFlightError extends TripBookingServiceError {
+    public ReserveFlightError(Exception exception) {
+      super(exception);
+    }
     // ...
   }
 

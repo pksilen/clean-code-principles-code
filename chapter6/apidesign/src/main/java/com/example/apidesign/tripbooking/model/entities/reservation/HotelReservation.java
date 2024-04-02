@@ -7,7 +7,7 @@ import java.util.Optional;
 public class HotelReservation extends AbstractReservation {
   private final HotelReservationService hotelReservationService;
 
-  public HotelReservation(/* ... */) {
+  public HotelReservation(...) {
     super(Optional.empty());
   }
 
@@ -16,7 +16,7 @@ public class HotelReservation extends AbstractReservation {
     assertIsNotReserved();
 
     try {
-      this.setId(hotelReservationService.reserveHotel(/* ... */));
+      this.setId(hotelReservationService.reserveHotel(...));
     } catch (final HotelReservationService.ReserveHotelError error) {
       throw new MakeError( error);
     }
