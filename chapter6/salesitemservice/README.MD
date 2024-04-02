@@ -29,7 +29,7 @@ mysql> exit
 exit
 ```
 
-## Start Nest.js Server
+## Start Nest.js REST/GraphQL/WebSocket Server
 
 ```bash
 # Choose one of the below commands depending whether you want to use REST, GraphQL or WebSocket
@@ -55,3 +55,16 @@ npm run start:dev
 Sample HTTP requests are available in scratches/salesitemservice_rest.http and
 scratches/salesitemservice_graphql.http files.
 You can use these requests with the WebStorm's HTTP client.
+
+## Start gRPC Server
+
+```bash
+npm run build
+node dist/grpcServer.js
+```
+
+You can use the server with the client in another terminal window:
+
+```bash
+node dist/grpcClient.js
+```
