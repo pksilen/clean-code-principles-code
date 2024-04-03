@@ -22,7 +22,7 @@ export default class GrpcSalesItemController {
         salesItems: await this.salesItemService.getSalesItems(),
       });
     } catch (error) {
-      this.respondWith(rpc.path, error, callback);
+      this.respondWithError(rpc.path, error, callback);
     }
   };
 
@@ -30,7 +30,7 @@ export default class GrpcSalesItemController {
     try {
       callback(null, await this.salesItemService.getSalesItem(rpc.request.id));
     } catch (error) {
-      this.respondWith(rpc.path, error, callback);
+      this.respondWithError(rpc.path, error, callback);
     }
   };
 
@@ -46,7 +46,7 @@ export default class GrpcSalesItemController {
         await this.salesItemService.createSalesItem(inputSalesItem),
       );
     } catch (error) {
-      this.respondWith(rpc.path, error, callback);
+      this.respondWithError(rpc.path, error, callback);
     }
   };
 
@@ -63,7 +63,7 @@ export default class GrpcSalesItemController {
       );
       callback(null, undefined);
     } catch (error) {
-      this.respondWith(rpc.path, error, callback);
+      this.respondWithError(rpc.path, error, callback);
     }
   };
 
@@ -72,11 +72,11 @@ export default class GrpcSalesItemController {
       await this.salesItemService.deleteSalesItem(rpc.request.id);
       callback(null, undefined);
     } catch (error) {
-      this.respondWith(rpc.path, error, callback);
+      this.respondWithError(rpc.path, error, callback);
     }
   };
 
-  private respondWith(endpoint: string, error: Error, callback) {
+  private respondWithError(endpoint: string, error: Error, callback) {
     callback(createGrpcErrorResponse(endpoint, error));
   }
 }
