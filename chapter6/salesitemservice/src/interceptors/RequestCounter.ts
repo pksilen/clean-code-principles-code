@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { Metrics } from '../common/metrics/Metrics';
 
 @Injectable()
-export class RequestCountIncrementor implements NestInterceptor {
+export class RequestCounter implements NestInterceptor {
   constructor(@Inject('metrics') private readonly metrics: Metrics) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

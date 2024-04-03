@@ -15,12 +15,12 @@ import SalesItemService from '../services/SalesItemService';
 import InputSalesItem from '../dtos/InputSalesItem';
 import OutputSalesItem from '../dtos/OutputSalesItem';
 import { AuditLogger } from '../interceptors/AuditLogger';
-import { RequestCountIncrementor } from '../interceptors/RequestCountIncrementor';
+import { RequestCounter } from '../interceptors/RequestCounter';
 import { RequestTracer } from '../interceptors/RequestTracer';
 import { AllowForUserThatHasOneOfRoles } from '../guards/AllowForUserThatHasOneOfRoles';
 import { authorizer } from '../common/authorizer/FakeAuthorizer';
 
-@UseInterceptors(RequestCountIncrementor, RequestTracer)
+@UseInterceptors(RequestCounter, RequestTracer)
 @Controller('sales-items')
 export default class RestSalesItemController {
   constructor(
