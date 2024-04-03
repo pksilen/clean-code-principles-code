@@ -56,7 +56,5 @@ export default class SalesItemServiceImpl implements SalesItemService {
     if (await this.salesItemRepository.find(id)) {
       await this.salesItemRepository.delete(id);
     }
-
-    return Promise.resolve();
   }
 }
