@@ -1,7 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { createErrorResponse } from '../common/utils/utils';
 import { ApolloError } from 'apollo-server-express';
-import * as process from 'process';
 
 @Catch()
 export class ErrorFilter implements ExceptionFilter {
