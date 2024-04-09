@@ -13,9 +13,11 @@ query ordersByUserAccountId($userAccountId: ID!) {
 }
 
 {
-  "userAccountId": "3"
+  "userAccountId": "2"
 }
 
+<> 2024-04-09T140416.200.json
+<> 2024-04-09T140408.200.json
 <> 2024-04-09T120156.200.json
 <> 2024-04-09T120149.200.json
 <> 2024-04-09T120144.200.json
@@ -40,6 +42,7 @@ query orderById($id: ID!) {
    "id": "2f632e13-b1ef-4cdb-ad89-58779a9b8392"
 }
 
+<> 2024-04-09T140403.200.json
 <> 2024-04-09T120139.200.json
 <> 2024-04-09T120039.200.json
 <> 2024-04-09T115941.200.json
@@ -80,3 +83,42 @@ mutation createOrder {
 }
 
 <> 2024-04-09T115506.200.json
+
+###
+GRAPHQL http://localhost:8080/graphql
+
+mutation updateOrder {
+    updateOrder(id: "2f632e13-b1ef-4cdb-ad89-58779a9b8392", inputOrder: {
+        userAccountId: "2",
+        orderItems: [
+            {
+                id: "c60a2f05-4f87-44d7-907f-b00c90c5181b",
+                salesItemId: 2,
+                quantity: 1
+            },
+            {
+                id: "c60a2f05-4f87-44d7-907f-b00c90c5181c",
+                salesItemId: 33,
+                quantity: 33
+            }
+        ]
+    }) {
+        id
+    }
+}
+
+<> 2024-04-09T140601.200.json
+
+###
+GRAPHQL http://localhost:8080/graphql
+
+mutation deleteOrder {
+    deleteOrder(id: "2f632e13-b1ef-4cdb-ad89-58779a9b8392") {
+        id
+    }
+}
+
+<> 2024-04-09T140635.200.json
+<> 2024-04-09T140626.200.json
+
+####

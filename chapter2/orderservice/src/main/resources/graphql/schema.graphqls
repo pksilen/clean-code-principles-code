@@ -21,6 +21,10 @@ type OutputOrderItem {
     quantity: Int!
 }
 
+type IDResponse {
+    id: ID!
+}
+
 type Query {
     ordersByUserAccountId(userAccountId: ID!): [OutputOrder!]!
     orderById(id: ID!): OutputOrder!
@@ -28,4 +32,6 @@ type Query {
 
 type Mutation {
     createOrder(inputOrder: InputOrder!): OutputOrder!
+    updateOrder(id: ID!, inputOrder: InputOrder!): IDResponse!
+    deleteOrder(id: ID!): IDResponse!
 }
