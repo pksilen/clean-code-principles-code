@@ -22,6 +22,7 @@ type OutputOrderItem {
 }
 
 type Query {
+    ordersByUserAccountId(userAccountId: ID!): [OutputOrder!]!
     orderById(id: ID!): OutputOrder!
 }
 

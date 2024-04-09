@@ -1,5 +1,29 @@
 GRAPHQL http://localhost:8080/graphql
 
+query ordersByUserAccountId($userAccountId: ID!) {
+    ordersByUserAccountId(userAccountId: $userAccountId) {
+        id
+        userAccountId
+        orderItems {
+            id
+            salesItemId
+            quantity
+        }
+    }
+}
+
+{
+  "userAccountId": "3"
+}
+
+<> 2024-04-09T120156.200.json
+<> 2024-04-09T120149.200.json
+<> 2024-04-09T120144.200.json
+<> 2024-04-09T120036.200.json
+
+###
+GRAPHQL http://localhost:8080/graphql
+
 query orderById($id: ID!) {
   orderById(id: $id) {
       id
@@ -13,8 +37,18 @@ query orderById($id: ID!) {
 }
 
 {
-   "id": "8c9d59f5-3ede-4ce0-9dd8-cebb544213d1"
+   "id": "2f632e13-b1ef-4cdb-ad89-58779a9b8392"
 }
+
+<> 2024-04-09T120139.200.json
+<> 2024-04-09T120039.200.json
+<> 2024-04-09T115941.200.json
+<> 2024-04-09T115843.200.json
+<> 2024-04-09T115838.200.json
+<> 2024-04-09T115822.200.json
+<> 2024-04-09T115815.200.json
+<> 2024-04-09T115633.200.json
+<> 2024-04-09T115556.200.json
 
 ###
 GRAPHQL http://localhost:8080/graphql
@@ -44,3 +78,5 @@ mutation createOrder {
         }
     }
 }
+
+<> 2024-04-09T115506.200.json
