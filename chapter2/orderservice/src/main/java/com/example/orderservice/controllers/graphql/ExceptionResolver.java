@@ -12,13 +12,15 @@ public class ExceptionResolver extends DataFetcherExceptionResolverAdapter {
 
   @Override
   protected GraphQLError resolveToSingleError(final Throwable throwable, final DataFetchingEnvironment environment) {
+    throwable.printStackTrace();
+
     // This is just an example exception resolver for any throwable for demonstration purposes
     // You should map thrown errors/exceptions to proper GraphQL error messages here
     return GraphqlErrorBuilder.newError()
-        .errorType(ErrorType.INTERNAL_ERROR)
-        .message("Custom error handler")
-        .path(environment.getExecutionStepInfo().getPath())
-        .location(environment.getField().getSourceLocation())
-        .build();
+      .errorType(ErrorType.INTERNAL_ERROR)
+      .message("Custom error handler")
+      .path(environment.getExecutionStepInfo().getPath())
+      .location(environment.getField().getSourceLocation())
+      .build();
   }
 }

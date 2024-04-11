@@ -1,4 +1,4 @@
-package com.example.orderservice.services.external;
+package com.example.orderservice.services;
 
 import org.springframework.stereotype.Service;
 

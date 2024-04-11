@@ -21,9 +21,8 @@ exit
 
 # Start Spring Boot Application
 
-Before starting the application, specify which database type to use: "sql" or "mongodb"
+Before starting the application, specify which database type to use: "sql", "jdbc" or "mongodb"
 in `Application.java` file. Initial value is "sql".
-
 
 `./gradlew :bootRun`
 
@@ -32,9 +31,11 @@ or
 `.\gradlew.bat :bootRun`
 
 # Execute REST HTTP Requests
+
 Example HTTP requests are available in scratches/orderservice_rest.http file.
 The file can be used e.g., with the HTTP client of Intellij IDEA Ultimate.
 
 # Execute GraphQL HTTP Requests
+
 Example HTTP requests are available in scratches/orderservice_graphql.http file.
 The file can be used e.g., with the HTTP client of Intellij IDEA Ultimate.

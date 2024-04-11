@@ -1,4 +1,4 @@
-package com.example.orderservice.services.application;
+package com.example.orderservice.services;
 
 import com.example.orderservice.Application;
 import com.example.orderservice.dtos.InputOrder;
@@ -6,7 +6,6 @@ import com.example.orderservice.dtos.OutputOrder;
 import com.example.orderservice.entities.Order;
 import com.example.orderservice.repositories.DbOrder;
 import com.example.orderservice.repositories.OrderRepository;
-import com.example.orderservice.services.external.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

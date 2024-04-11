@@ -1,11 +1,11 @@
-package com.example.orderservice.services.application;
+package com.example.orderservice.services;
 
 import com.example.orderservice.Application;
 import com.example.orderservice.dtos.InputOrder;
 import com.example.orderservice.dtos.OutputOrder;
 import com.example.orderservice.entities.Order;
-import com.example.orderservice.repositories.DbOrder;
 import com.example.orderservice.errors.EntityNotFoundError;
+import com.example.orderservice.repositories.DbOrder;
 import com.example.orderservice.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
   public final OutputOrder createOrder(final InputOrder inputOrder) {
     // Input DTO is converted to valid domain entity
     final var order = Order.from(inputOrder);
-    
+
     // If your model had additional business logic, you
     // could perform it here using domain entity and/or
     // domain service methods
