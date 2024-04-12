@@ -21,28 +21,28 @@ public class GraphQlOrderController {
   }
 
   @MutationMapping
-  public final OutputOrder createOrder(
+  public OutputOrder createOrder(
     @Valid @Argument final InputOrder inputOrder
   ) {
     return orderService.createOrder(inputOrder);
   }
 
   @QueryMapping
-  public final Iterable<OutputOrder> ordersByUserAccountId(
+  public Iterable<OutputOrder> ordersByUserAccountId(
     @Argument final String userAccountId
   ) {
     return orderService.getOrdersByUserAccountId(userAccountId);
   }
 
   @QueryMapping
-  public final OutputOrder orderById(
+  public OutputOrder orderById(
     @Argument final String id
   ) {
     return orderService.getOrderById(id);
   }
 
   @MutationMapping
-  public final IdResponse updateOrder(
+  public IdResponse updateOrder(
     @Argument final String id,
     @Argument final InputOrder inputOrder
   ) {
@@ -51,7 +51,7 @@ public class GraphQlOrderController {
   }
 
   @MutationMapping
-  public final IdResponse deleteOrder(
+  public IdResponse deleteOrder(
     @Argument final String id
   ) {
     orderService.deleteOrderById(id);
