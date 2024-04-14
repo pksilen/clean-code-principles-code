@@ -2,7 +2,9 @@ import SalesItemRepository from '../../SalesItemRepository';
 import SalesItem from '../../../entities/SalesItem';
 import DatabaseError from '../../../errors/DatabaseError';
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { SortBy } from '../../../dtos/SalesItemsQuery';
+import Constants from '../../../common/Constants';
 
 @Injectable()
 export default class PrismaOrmSalesItemRepository
@@ -23,10 +25,18 @@ export default class PrismaOrmSalesItemRepository
     }
   }
 
-  async findAll(): Promise<SalesItem[]> {
+  async findAll(
+    search: string | undefined,
+    page: number,
+    sortBy: SortBy,
+  ): Promise<SalesItem[]> {
     try {
       const dbSalesItems = await this.prismaClient.salesItem.findMany({
         include: { images: true },
+        where: search ? { name: { contains: search } } : {},
+        orderBy: [PrismaOrmSalesItemRepository.createOrderObject(sortBy)],
+        skip: (page - 1) * Constants.PAGE_SIZE,
+        take: Constants.PAGE_SIZE,
       });
 
       return dbSalesItems.map((item) =>
@@ -77,6 +87,19 @@ export default class PrismaOrmSalesItemRepository
     } catch (error) {
       throw new DatabaseError(error);
     }
+  }
+
+  private static createOrderObject(
+    sortBy: SortBy,
+  ): Prisma.SalesItemOrderByWithRelationInput {
+    switch (sortBy) {
+      case 'newest':
+        return { createdAtTimestampInMs: 'desc' };
+    }
+
+    return {
+      name: 'asc',
+    };
   }
 
   private static toData(salesItem: SalesItem) {

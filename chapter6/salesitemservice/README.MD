@@ -58,7 +58,10 @@ You can use these requests with the WebStorm's HTTP client.
 
 ## Start gRPC Server
 
+gRPC server has currently fixed implementation that works only with MySQL and PrismaORM.
+
 ```bash
+export DATABASE_URL=mysql://root:password@localhost:3306/salesitemservice
 npm run build
 node dist/grpcServer.js
 ```

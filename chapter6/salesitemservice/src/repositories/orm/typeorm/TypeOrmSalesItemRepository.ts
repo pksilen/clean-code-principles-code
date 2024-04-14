@@ -3,9 +3,11 @@ import SalesItem from '../../../entities/SalesItem';
 import DbSalesItem from './entities/DbSalesItem';
 import DatabaseError from '../../../errors/DatabaseError';
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, ILike } from 'typeorm';
 import DbSalesItemImage from './entities/DbSalesItemImage';
 import { getDbConnProperties } from '../../../common/utils/utils';
+import { SortBy } from '../../../dtos/SalesItemsQuery';
+import Constants from '../../../common/Constants';
 
 @Injectable()
 export default class TypeOrmSalesItemRepository implements SalesItemRepository {
@@ -39,10 +41,25 @@ export default class TypeOrmSalesItemRepository implements SalesItemRepository {
     }
   }
 
-  async findAll(): Promise<SalesItem[]> {
+  async findAll(
+    search: string | undefined,
+    page: number,
+    sortBy: SortBy,
+  ): Promise<SalesItem[]> {
     try {
       await this.initializeDataSourceIfNeeded();
-      const dbSalesItems = await this.dataSource.manager.find(DbSalesItem);
+
+      const dbSalesItems = await this.dataSource.manager.find(DbSalesItem, {
+        where: search
+          ? {
+              name: ILike(`%${search}%`),
+            }
+          : {},
+        order: TypeOrmSalesItemRepository.createOrderObject(sortBy),
+        take: Constants.PAGE_SIZE,
+        skip: (page - 1) * Constants.PAGE_SIZE,
+      });
+
       return dbSalesItems.map((item) => item.toDomainEntity());
     } catch (error) {
       throw new DatabaseError(error);
@@ -90,5 +107,20 @@ export default class TypeOrmSalesItemRepository implements SalesItemRepository {
       await this.dataSource.initialize();
       this.isDataSourceInitialized = true;
     }
+  }
+
+  private static createOrderObject(
+    sortBy: SortBy,
+  ): Partial<
+    Omit<Record<keyof DbSalesItem, 'ASC' | 'DESC'>, 'toDomainEntity'>
+  > {
+    switch (sortBy) {
+      case 'newest':
+        return { createdAtTimestampInMs: 'DESC' };
+    }
+
+    return {
+      name: 'ASC',
+    };
   }
 }

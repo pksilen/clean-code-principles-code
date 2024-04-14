@@ -5,6 +5,7 @@ import OutputSalesItem from '../dtos/OutputSalesItem';
 import SalesItem from '../entities/SalesItem';
 import SalesItemRepository from '../repositories/SalesItemRepository';
 import EntityNotFoundError from '../errors/EntityNotFoundError';
+import { SortBy } from '../dtos/SalesItemsQuery';
 
 @Injectable()
 export default class SalesItemServiceImpl implements SalesItemService {
@@ -21,8 +22,16 @@ export default class SalesItemServiceImpl implements SalesItemService {
     return OutputSalesItem.from(salesItem);
   }
 
-  async getSalesItems(): Promise<OutputSalesItem[]> {
-    const salesItems = await this.salesItemRepository.findAll();
+  async getSalesItems(
+    search: string | undefined,
+    page: number,
+    sortBy: SortBy,
+  ): Promise<OutputSalesItem[]> {
+    const salesItems = await this.salesItemRepository.findAll(
+      search,
+      page,
+      sortBy,
+    );
     return await Promise.all(
       salesItems.map(
         async (salesItem) => await OutputSalesItem.from(salesItem),

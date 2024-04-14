@@ -9,6 +9,7 @@ import { Inject, UseFilters, UseInterceptors } from '@nestjs/common';
 import { transformAndValidate } from 'class-transformer-validator';
 import { WebSocketErrorFilter } from './WebSocketErrorFilter';
 import { WebSocketRequestTracer } from './WebSocketRequestTracer';
+import { SalesItemsQuery } from '../../dtos/SalesItemsQuery';
 
 @UseInterceptors(WebSocketRequestTracer)
 @UseFilters(new WebSocketErrorFilter())
@@ -26,8 +27,14 @@ export default class WebSocketSalesItemController {
   }
 
   @SubscribeMessage('getSalesItems')
-  getSalesItems() {
-    return this.salesItemService.getSalesItems();
+  async getSalesItems(@MessageBody() data: object) {
+    const salesItemsQuery = await transformAndValidate(SalesItemsQuery, data);
+
+    return this.salesItemService.getSalesItems(
+      salesItemsQuery.nameContains,
+      salesItemsQuery.page,
+      salesItemsQuery.sortBy,
+    );
   }
 
   @SubscribeMessage('getSalesItem')

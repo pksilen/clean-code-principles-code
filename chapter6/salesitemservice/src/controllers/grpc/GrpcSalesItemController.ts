@@ -2,6 +2,7 @@ import SalesItemService from '../../services/SalesItemService';
 import { transformAndValidate } from 'class-transformer-validator';
 import InputSalesItem from '../../dtos/InputSalesItem';
 import { createGrpcErrorResponse } from '../../common/utils/utils';
+import { SalesItemsQuery } from '../../dtos/SalesItemsQuery';
 
 export default class GrpcSalesItemController {
   constructor(private readonly salesItemService: SalesItemService) {}
@@ -18,8 +19,17 @@ export default class GrpcSalesItemController {
 
   private getSalesItems = async (rpc, callback) => {
     try {
+      const salesItemsQuery = await transformAndValidate(
+        SalesItemsQuery,
+        rpc.request as object,
+      );
+
       callback(null, {
-        salesItems: await this.salesItemService.getSalesItems(),
+        salesItems: await this.salesItemService.getSalesItems(
+          salesItemsQuery.nameContains,
+          salesItemsQuery.page,
+          salesItemsQuery.sortBy,
+        ),
       });
     } catch (error) {
       this.respondWithError(rpc.path, error, callback);

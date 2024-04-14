@@ -22,9 +22,12 @@ grpcClient.getSalesItem({ id: '' }, (error, response) => {
   console.log(error, JSON.stringify(response, undefined, 2));
 });
 
-grpcClient.getSalesItems({}, (error, response) => {
-  console.log(error, JSON.stringify(response.salesItems, undefined, 2));
-});
+grpcClient.getSalesItems(
+  { nameContains: 'Sales', page: 1, sortBy: 'newest' },
+  (error, response) => {
+    console.log(error, JSON.stringify(response, undefined, 2));
+  },
+);
 
 grpcClient.createSalesItem(
   {

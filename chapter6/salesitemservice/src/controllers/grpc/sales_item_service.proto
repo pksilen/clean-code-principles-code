@@ -13,10 +13,9 @@ service SalesItemService {
 }
 
 message GetSalesItemsArg {
-  optional string sortByField = 1;
-  optional string sortDirection = 2;
-  optional uint64 offset = 3;
-  optional uint64 limit = 4;
+  optional string nameContains = 1;
+  optional uint32 page = 2;
+  optional string sortBy = 3;
 }
 
 message Nothing {}

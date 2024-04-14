@@ -2,6 +2,8 @@ import * as mongodb from 'mongodb';
 import SalesItemRepository from './SalesItemRepository';
 import SalesItem from '../entities/SalesItem';
 import DatabaseError from '../errors/DatabaseError';
+import { SortBy } from '../dtos/SalesItemsQuery';
+import Constants from '../common/Constants';
 
 export default class MongoDbSalesItemRepository implements SalesItemRepository {
   private readonly client: mongodb.MongoClient;
@@ -27,10 +29,23 @@ export default class MongoDbSalesItemRepository implements SalesItemRepository {
     }
   }
 
-  async findAll(): Promise<SalesItem[]> {
+  async findAll(
+    search: string | undefined,
+    page: number,
+    sortBy: SortBy,
+  ): Promise<SalesItem[]> {
     try {
       await this.connectIfNeeded();
-      const cursor = this.salesItemsCollection.find();
+
+      const sortExpression =
+        MongoDbSalesItemRepository.createSortExpression(sortBy);
+
+      const cursor = this.salesItemsCollection
+        .find(search ? { name: new RegExp(search, 'i') } : {})
+        .sort(sortExpression)
+        .limit(Constants.PAGE_SIZE)
+        .skip((page - 1) * Constants.PAGE_SIZE);
+
       const salesItemDocuments = await cursor.toArray();
 
       return salesItemDocuments.map((salesItemDocument) =>
@@ -95,6 +110,15 @@ export default class MongoDbSalesItemRepository implements SalesItemRepository {
     const databaseName = databaseUrl.split('/')[3];
     const db = this.client.db(databaseName);
     this.salesItemsCollection = db.collection('salesitems');
+  }
+
+  private static createSortExpression(sortBy: SortBy): Record<string, 1 | -1> {
+    switch (sortBy) {
+      case 'newest':
+        return { createdAtTimestampInMs: -1 };
+    }
+
+    return { name: 1 };
   }
 
   private toDomainEntity(salesItemDoc: mongodb.Document): SalesItem {

@@ -4,6 +4,8 @@ import SalesItem from '../entities/SalesItem';
 import DatabaseError from 'src/errors/DatabaseError';
 import SalesItemImage from '../entities/SalesItemImage';
 import { getDbConnProperties } from '../common/utils/utils';
+import { SortBy } from '../dtos/SalesItemsQuery';
+import Constants from '../common/Constants';
 
 interface DatabaseConfig {
   user: string;
@@ -56,15 +58,29 @@ export default class ParamSqlSalesItemRepository
     }
   }
 
-  async findAll(): Promise<SalesItem[]> {
+  async findAll(
+    search: string | undefined,
+    page: number,
+    sortBy: SortBy,
+  ): Promise<SalesItem[]> {
     let connection: mysql.PoolConnection | undefined;
 
     try {
       connection = await this.connectionPool.getConnection();
+
+      const orderByExpression =
+        ParamSqlSalesItemRepository.createOrderByExpression(sortBy);
+
+      const limitOffsetExpression = `LIMIT ${Constants.PAGE_SIZE} OFFSET ${(page - 1) * Constants.PAGE_SIZE}`;
+
       const [rows] = await connection.execute(
         'SELECT s.id, s.createdAtTimestampInMs, s.name, s.priceInCents, ' +
           'si.id as imageId, si.rank as imageRank, si.url as imageUrl ' +
-          'FROM salesitems s LEFT JOIN salesitemimages si ON si.salesItemId = s.id',
+          'FROM salesitems s LEFT JOIN salesitemimages si ON si.salesItemId = s.id ' +
+          (search ? 'WHERE s.name LIKE ? ' : '') +
+          orderByExpression +
+          limitOffsetExpression,
+        [...(search ? [`%${search}%`] : [])],
       );
 
       return this.getSalesItems(rows as any[]);
@@ -211,6 +227,15 @@ export default class ParamSqlSalesItemRepository
         salesItemId,
       ]);
     }
+  }
+
+  private static createOrderByExpression(sortBy: SortBy): string {
+    switch (sortBy) {
+      case 'newest':
+        return 'ORDER BY s.createdAtTimestampInMs DESC ';
+    }
+
+    return '';
   }
 
   private getSalesItems(cursor: any): SalesItem[] {

@@ -8,8 +8,10 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
   UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
 import SalesItemService from '../services/SalesItemService';
 import InputSalesItem from '../dtos/InputSalesItem';
@@ -19,6 +21,7 @@ import { RequestCounter } from '../interceptors/RequestCounter';
 import { RequestTracer } from '../interceptors/RequestTracer';
 import { AllowForUserThatHasOneOfRoles } from '../guards/AllowForUserThatHasOneOfRoles';
 import { authorizer } from '../common/authorizer/FakeAuthorizer';
+import { SalesItemsQuery } from '../dtos/SalesItemsQuery';
 
 @UseInterceptors(RequestCounter, RequestTracer)
 @Controller('sales-items')
@@ -36,9 +39,14 @@ export default class RestSalesItemController {
   }
 
   @Get()
-  getSalesItems() // @Query('userAccountId') userAccountId: string,
-  : Promise<OutputSalesItem[]> {
-    return this.salesItemService.getSalesItems();
+  getSalesItems(
+    @Query(ValidationPipe) salesItemsQuery: SalesItemsQuery,
+  ): Promise<OutputSalesItem[]> {
+    return this.salesItemService.getSalesItems(
+      salesItemsQuery.nameContains,
+      salesItemsQuery.page,
+      salesItemsQuery.sortBy,
+    );
   }
 
   @Get('/:id')

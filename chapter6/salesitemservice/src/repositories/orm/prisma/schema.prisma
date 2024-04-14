@@ -19,6 +19,6 @@ model SalesItemImage {
   id          String     @id @db.VarChar(36)
   rank        Int
   url         String
-  salesItem   SalesItem? @relation(fields: [salesItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  salesItem   SalesItem? @relation(fields: [salesItemId], references: [id], onDelete: Cascade)
   salesItemId String?
 }

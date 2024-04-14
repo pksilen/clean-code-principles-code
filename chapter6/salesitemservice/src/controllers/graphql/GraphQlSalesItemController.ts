@@ -5,6 +5,7 @@ import SalesItemService from '../../services/SalesItemService';
 import InputSalesItem from '../../dtos/InputSalesItem';
 import IdResponse from './IdResponse';
 import { GraphQlRequestTracer } from './GraphQlRequestTracer';
+import { SalesItemsQuery } from '../../dtos/SalesItemsQuery';
 
 @UseInterceptors(GraphQlRequestTracer)
 @Resolver()
@@ -15,8 +16,12 @@ export default class GraphQlSalesItemController {
   ) {}
 
   @Query(() => [OutputSalesItem])
-  async salesItems() {
-    return await this.salesItemService.getSalesItems();
+  async salesItems(@Args('queryParams') salesItemsQuery: SalesItemsQuery) {
+    return await this.salesItemService.getSalesItems(
+      salesItemsQuery.nameContains,
+      salesItemsQuery.page,
+      salesItemsQuery.sortBy,
+    );
   }
 
   @Query(() => OutputSalesItem)

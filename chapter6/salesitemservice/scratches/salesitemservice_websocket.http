@@ -27,7 +27,12 @@ WEBSOCKET ws://localhost:8001
 Content-Type: application/json
 
 {
-    "event": "getSalesItems"
+    "event": "getSalesItems",
+    "data": {
+      "nameContains": "Sales",
+      "page": 1,
+      "sortBy": "newest"
+    }
 }
 
 ###
