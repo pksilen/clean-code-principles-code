@@ -24,8 +24,9 @@ public class HeaderModifyingRequestWrapper extends HttpServletRequestWrapper {
 
   @Override
   public Enumeration<String> getHeaders(final String name) {
-    final String headerValue = modifiedHeaders.get(name);
-    return Collections.enumeration(List.of(headerValue != null ? headerValue : super.getHeader(name)));
+    final String modifiedHeaderValue = modifiedHeaders.get(name);
+    final String headerValue = modifiedHeaderValue != null ? modifiedHeaderValue : super.getHeader(name);
+    return headerValue == null ? Collections.emptyEnumeration() : Collections.enumeration(List.of(headerValue));
   }
 
   @Override

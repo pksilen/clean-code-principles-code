@@ -1,6 +1,7 @@
 package com.example.orderservice.controllers.rest;
 
 import com.example.orderservice.common.aspects.auditlogging.AuditLog;
+import com.example.orderservice.common.aspects.authorization.annotations.AllowForUserWithOneOfRoles;
 import com.example.orderservice.dtos.InputOrder;
 import com.example.orderservice.dtos.OutputOrder;
 import com.example.orderservice.services.OrderService;
@@ -56,12 +57,14 @@ public class RestOrderController {
     orderService.updateOrder(id, inputOrder);
   }
 
+  @AllowForUserWithOneOfRoles({"admin"})
   @AuditLog
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteOrder(
     @PathVariable final String id,
-    final HttpServletRequest request
+    final HttpServletRequest request,
+    @RequestHeader(value = "Authorization", required = false) final String authHeader
   ) {
     orderService.deleteOrderById(id);
   }
