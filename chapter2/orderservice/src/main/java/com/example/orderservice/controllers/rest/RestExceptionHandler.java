@@ -12,8 +12,10 @@ public class RestExceptionHandler {
   // code
   @ExceptionHandler({Exception.class})
   public ResponseEntity<Object> handleAnyException(final Exception exception) {
+    exception.printStackTrace();
+
     return ResponseEntity
       .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .body("Customer handler message");
+      .body("Customer exception handler message");
   }
 }

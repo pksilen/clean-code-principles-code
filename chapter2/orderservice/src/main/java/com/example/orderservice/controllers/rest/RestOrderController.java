@@ -1,8 +1,10 @@
 package com.example.orderservice.controllers.rest;
 
+import com.example.orderservice.common.aspects.auditlogging.AuditLog;
 import com.example.orderservice.dtos.InputOrder;
 import com.example.orderservice.dtos.OutputOrder;
 import com.example.orderservice.services.OrderService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/orders")
 public class RestOrderController {
-  private final OrderService orderService;
+  private OrderService orderService;
 
   @Autowired
   public RestOrderController(final OrderService orderService) {
@@ -23,7 +25,7 @@ public class RestOrderController {
   // Controller method should delegate to application services (use cases)
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public final OutputOrder createOrder(
+  public OutputOrder createOrder(
     @Valid @RequestBody final InputOrder inputOrder
   ) {
     return orderService.createOrder(inputOrder);
@@ -31,7 +33,7 @@ public class RestOrderController {
 
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public final OutputOrder getOrderById(
+  public OutputOrder getOrderById(
     @PathVariable("id") final String id
   ) {
     return orderService.getOrderById(id);
@@ -39,7 +41,7 @@ public class RestOrderController {
 
   @GetMapping(params = "userAccountId")
   @ResponseStatus(HttpStatus.OK)
-  public final Iterable<OutputOrder> getOrdersByUserAccountId(
+  public Iterable<OutputOrder> getOrdersByUserAccountId(
     @RequestParam("userAccountId") final String userAccountId
   ) {
     return orderService.getOrdersByUserAccountId(userAccountId);
@@ -47,17 +49,19 @@ public class RestOrderController {
 
   @PutMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public final void updateOrder(
+  public void updateOrder(
     @PathVariable final String id,
     @Valid @RequestBody final InputOrder inputOrder
   ) {
     orderService.updateOrder(id, inputOrder);
   }
 
+  @AuditLog
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public final void deleteOrder(
-    @PathVariable final String id
+  public void deleteOrder(
+    @PathVariable final String id,
+    final HttpServletRequest request
   ) {
     orderService.deleteOrderById(id);
   }
