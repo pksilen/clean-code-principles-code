@@ -80,7 +80,7 @@ export default class ParamSqlSalesItemRepository
           (search ? 'WHERE s.name LIKE ? ' : '') +
           orderByExpression +
           limitOffsetExpression,
-        [...(search ? [`%${search}%`] : [])],
+        search ? [`%${search}%`] : undefined,
       );
 
       return this.getSalesItems(rows as any[]);
