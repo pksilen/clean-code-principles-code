@@ -1,6 +1,7 @@
 package com.example.orderservice.services;
 
 import com.example.orderservice.Application;
+import com.example.orderservice.common.Constants;
 import com.example.orderservice.dtos.InputOrder;
 import com.example.orderservice.dtos.OutputOrder;
 import com.example.orderservice.entities.Order;
@@ -10,6 +11,7 @@ import com.example.orderservice.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.StreamSupport;
@@ -64,8 +66,10 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public Iterable<OutputOrder> getOrdersByUserAccountId(final String userAccountId) {
-    final var dbOrders = orderRepository.findByUserAccountId(userAccountId);
+  public Iterable<OutputOrder> getOrdersByUserAccountId(final String userAccountId, final int page) {
+    // final var sort = Sort.by("createdAtTimestampInMs").descending(); // NONSONAR
+    final var pageRequest = PageRequest.of(page - 1, Constants.PAGE_SIZE/*, sort*/);
+    final var dbOrders = orderRepository.findByUserAccountId(userAccountId, pageRequest);
     return StreamSupport.stream(dbOrders.spliterator(), false)
       .map(dbOrder -> dbOrder.toDomainEntity().toOutput()).toList();
   }

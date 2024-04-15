@@ -7,6 +7,7 @@ import com.example.orderservice.dtos.OutputOrder;
 import com.example.orderservice.services.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -43,9 +44,10 @@ public class RestOrderController {
   @GetMapping(params = "userAccountId")
   @ResponseStatus(HttpStatus.OK)
   public Iterable<OutputOrder> getOrdersByUserAccountId(
-    @RequestParam("userAccountId") final String userAccountId
+    @RequestParam("userAccountId") final String userAccountId,
+    @RequestParam(value = "page", defaultValue = "1") @Min(1) int page
   ) {
-    return orderService.getOrdersByUserAccountId(userAccountId);
+    return orderService.getOrdersByUserAccountId(userAccountId, page);
   }
 
   @PutMapping("/{id}")

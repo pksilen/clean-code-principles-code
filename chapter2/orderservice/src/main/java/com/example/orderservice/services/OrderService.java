@@ -8,7 +8,7 @@ public interface OrderService {
 
   OutputOrder getOrderById(final String id);
 
-  Iterable<OutputOrder> getOrdersByUserAccountId(final String userAccountId);
+  Iterable<OutputOrder> getOrdersByUserAccountId(final String userAccountId, final int page);
 
   void updateOrder(final String id, final InputOrder inputOrder);
 

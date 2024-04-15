@@ -28,6 +28,10 @@ public class ShoppingCartEmptyingOrderService implements OrderService {
   @Override
   public final OutputOrder createOrder(final InputOrder inputOrder) {
     final var order = Order.from(inputOrder);
+
+    // Instead of calling the shopping cart domain service here, you should consider
+    // calling it from the Order.from factory method, so you don't have to use a
+    // getter for userAccountId and you can make your code more object-oriented
     shoppingCartService.emptyCart(order.getUserAccountId());
     final var dbOrder = DbOrder.from(order);
     orderRepository.save(dbOrder);
@@ -41,7 +45,7 @@ public class ShoppingCartEmptyingOrderService implements OrderService {
   }
 
   @Override
-  public Iterable<OutputOrder> getOrdersByUserAccountId(String userAccountId) {
+  public Iterable<OutputOrder> getOrdersByUserAccountId(final String userAccountId, final int page) {
     // Not implemented
     return null;
   }

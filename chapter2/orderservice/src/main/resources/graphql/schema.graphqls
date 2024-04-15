@@ -26,7 +26,7 @@ type IDResponse {
 }
 
 type Query {
-    ordersByUserAccountId(userAccountId: ID!): [OutputOrder!]!
+    ordersByUserAccountId(userAccountId: ID!, page: Int = 1): [OutputOrder!]!
     orderById(id: ID!): OutputOrder!
 }
 

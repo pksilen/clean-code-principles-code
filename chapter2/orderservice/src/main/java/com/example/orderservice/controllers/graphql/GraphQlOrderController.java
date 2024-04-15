@@ -6,6 +6,7 @@ import com.example.orderservice.dtos.InputOrder;
 import com.example.orderservice.dtos.OutputOrder;
 import com.example.orderservice.services.OrderService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.ContextValue;
@@ -32,9 +33,10 @@ public class GraphQlOrderController {
 
   @QueryMapping
   public Iterable<OutputOrder> ordersByUserAccountId(
-    @Argument final String userAccountId
+    @Argument final String userAccountId,
+    @Argument @Min(1) final int page
   ) {
-    return orderService.getOrdersByUserAccountId(userAccountId);
+    return orderService.getOrdersByUserAccountId(userAccountId, page);
   }
 
   @QueryMapping

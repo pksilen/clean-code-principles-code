@@ -8,6 +8,9 @@ import com.example.orderservice.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -59,18 +62,20 @@ public class JdbcTemplateOrderRepository implements OrderRepository {
     return dbOrder.isPresent();
   }
 
-  public Iterable<DbOrder> findByUserAccountId(final String userAccountId) {
+  public Page<DbOrder> findByUserAccountId(final String userAccountId, final Pageable pageable) {
     final var idToDbOrder = new HashMap<String, DbOrder>();
 
     try {
-      return jdbcTemplate.query(
+      final var dbOrders = jdbcTemplate.query(
         "SELECT o.id, o.userAccountId, " +
           "oi.id as orderItemId, oi.salesItemId as salesItemId, oi.quantity as quantity " +
-          "FROM orders o LEFT JOIN orderitems oi ON oi.orderId = o.id WHERE o.userAccountId = ?",
+          "FROM orders o LEFT JOIN orderitems oi ON oi.orderId = o.id WHERE o.userAccountId = ? " +
+          "LIMIT " + pageable.getOffset() + "," + pageable.getPageSize(),
         (resultSet, rowNum) -> createOrUpdateDbOrder(resultSet, idToDbOrder),
         userAccountId
       ).stream().distinct().toList();
 
+      return new PageImpl<>(dbOrders);
     } catch (final DataAccessException error) {
       throw new DatabaseError(error);
     }

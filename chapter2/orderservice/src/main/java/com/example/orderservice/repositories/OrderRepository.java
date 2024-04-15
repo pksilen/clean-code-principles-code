@@ -1,5 +1,8 @@
 package com.example.orderservice.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.Optional;
 
 
@@ -10,7 +13,7 @@ public interface OrderRepository {
 
   boolean existsById(final String id);
 
-  Iterable<DbOrder> findByUserAccountId(final String userAccountId);
+  Page<DbOrder> findByUserAccountId(final String userAccountId, Pageable pageable);
 
   void deleteById(final String id);
 }
