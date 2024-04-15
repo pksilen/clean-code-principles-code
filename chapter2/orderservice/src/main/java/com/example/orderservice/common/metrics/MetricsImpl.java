@@ -16,4 +16,10 @@ public class MetricsImpl implements Metrics {
   public long getRequestCount() {
     return requestCounter.getCount();
   }
+
+  @Override
+  public void addRequestDurationInNs(String endpoint, long requestDurationInNs) {
+    // Implement using a histogram, e.g. using Prometheus Java client
+    System.out.println("Request duration of " + (requestDurationInNs / (1000.0 * 1000.0)) + " ms for endpoint " + endpoint + " added to histogram");
+  }
 }

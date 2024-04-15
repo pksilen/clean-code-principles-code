@@ -6,12 +6,14 @@ import com.example.orderservice.common.utils.ContentCachingRequestWrapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
 
 @Component
+@Order(1)
 public class RequestTracingFilter implements Filter {
   private final Logger logger;
 
