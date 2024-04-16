@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
     final var dbOrder = orderRepository.findById(id)
       .orElseThrow(() ->
         new EntityNotFoundError(ORDER, id));
-
+    
     return dbOrder.toDomainEntity().toOutput();
   }
 

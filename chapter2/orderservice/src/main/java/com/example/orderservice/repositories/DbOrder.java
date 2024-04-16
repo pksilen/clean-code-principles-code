@@ -1,6 +1,5 @@
 package com.example.orderservice.repositories;
 
-import com.example.orderservice.dtos.InputOrder;
 import com.example.orderservice.entities.Order;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.annotation.Id;
 
 import java.util.List;
-import java.util.UUID;
 
 
 @Entity
@@ -26,7 +24,7 @@ public class DbOrder {
   private String id;
   private String userAccountId;
 
-  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<DbOrderItem> orderItems;
 
   public static DbOrder from(final Order order) {
